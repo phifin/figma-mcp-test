@@ -26,10 +26,10 @@ const stepImages = [
 ];
 const bottomCtaImage = "https://www.figma.com/api/mcp/asset/e0545c49-7cfb-4c41-87e8-73410a99a164";
 const trustLogos = [
-  { name: "PCI DSS", src: "/certs/pci-dss.svg" },
-  { name: "ISO 27001", src: "/certs/iso-27001.svg" },
-  { name: "ISO 22301", src: "/certs/iso-22301.svg" },
-  { name: "ISO 20000", src: "/certs/iso-20000.svg" },
+  { name: "PCI DSS", src: "certs/pci-dss.svg" },
+  { name: "ISO 27001", src: "certs/iso-27001.svg" },
+  { name: "ISO 22301", src: "certs/iso-22301.svg" },
+  { name: "ISO 20000", src: "certs/iso-20000.svg" },
 ];
 
 const featureList = [
@@ -75,6 +75,7 @@ const pricing = [
 ];
 
 export default function Home() {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const [openAccordion, setOpenAccordion] = useState(0);
   const [productIndex, setProductIndex] = useState(0);
   const [industryIndex, setIndustryIndex] = useState(0);
@@ -279,7 +280,7 @@ export default function Home() {
           <div className="grid w-full gap-8 md:grid-cols-4">
             {trustLogos.map((logo) => (
               <div key={logo.name} className="flex h-64 items-center justify-center rounded-3xl bg-white p-6">
-                <img src={logo.src} alt={logo.name} className="h-20 w-auto object-contain" />
+                <img src={`${basePath}/${logo.src}`} alt={logo.name} className="h-20 w-auto object-contain" />
               </div>
             ))}
           </div>
