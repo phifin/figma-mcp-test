@@ -1,0 +1,8 @@
+<svg width="320" height="200" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="200" rx="24" fill="#F4F4F5"/>
+  <polygon points="55,62 178,56 210,126 86,132" fill="#0F766E"/>
+  <text x="72" y="118" font-family="Arial, sans-serif" font-weight="700" font-size="66" fill="white">PCI</text>
+  <path d="M184 104L203 123L243 78" stroke="#22C55E" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="156" y="162" font-family="Arial, sans-serif" font-weight="700" font-size="56" fill="#0F766E">DSS</text>
+  <text x="157" y="182" font-family="Arial, sans-serif" font-weight="700" font-size="18" letter-spacing="1" fill="#0F766E">COMPLIANT</text>
+</svg>
