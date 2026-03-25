@@ -312,6 +312,7 @@ export default function Home() {
         <div className="mx-auto w-full max-w-[1320px] px-5 pb-6 pt-12 md:px-8">
           <div className="grid gap-10 md:grid-cols-[1.9fr_1fr_1fr_1fr_1fr] md:gap-8">
             <div>
+              <Image src={`${basePath}/unipay-logo.svg`} alt="Unipay logo" width={100} height={40} className="h-10 w-auto" />
               <p className="max-w-md text-[22px] font-semibold leading-tight">CÔNG TY CỔ PHẦN GIẢI PHÁP THANH TOÁN UNIPAY</p>
               <p className="mt-4 max-w-lg text-sm leading-6 text-white/60">Tầng 2, Tòa nhà Saigon Paragon, Số 03 Nguyễn Lương Bằng, Phường Tân Mỹ, TP Hồ Chí Minh, Việt Nam</p>
               <p className="mt-5 text-sm text-white/85">contact@unipay.net.vn · 02873096667</p>
