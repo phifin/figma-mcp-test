@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
-const heroImage = "https://www.figma.com/api/mcp/asset/b2696088-9314-479e-ba36-5e417b72a5d4";
+const heroImage = "https://www.figma.com/api/mcp/asset/4f67fa4c-2e60-40dc-884a-08bb672dd52e";
 const featureImages = [
-  "https://www.figma.com/api/mcp/asset/39c79bf0-4d90-4ece-844a-7a6af91f86fb",
-  "https://www.figma.com/api/mcp/asset/088cf617-128a-45c9-b2ec-9a36c868cbcf",
-  "https://www.figma.com/api/mcp/asset/47674450-5034-44c5-bd9b-6b3e6e2c515a",
-  "https://www.figma.com/api/mcp/asset/1445202b-176b-4535-93ba-6aba6966490c",
-  "https://www.figma.com/api/mcp/asset/1b36f7c4-3312-465d-a3be-7ef917a15339",
+  "https://www.figma.com/api/mcp/asset/11ef468d-629a-4da1-bb55-b9dd9aac3402",
+  "https://www.figma.com/api/mcp/asset/dba53f22-7ab3-4e18-8688-581abd42c698",
+  "https://www.figma.com/api/mcp/asset/b070c32f-cd28-4d4a-83f7-829353a55c21",
+  "https://www.figma.com/api/mcp/asset/c7269724-521e-402c-9479-b911a42b780d",
+  "https://www.figma.com/api/mcp/asset/e270b817-d24f-499c-9d6c-5743314d240a",
 ];
 const dataImage = "https://www.figma.com/api/mcp/asset/dbd3e13d-3d49-43b8-80c1-ede12a36af45";
 const productImage = "https://www.figma.com/api/mcp/asset/d1bbc547-5e80-401a-88aa-88f2c95e9f59";
@@ -76,6 +77,7 @@ const pricing = [
 
 export default function Home() {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const sectionContainer = "mx-auto w-full max-w-[1320px] px-5 md:px-8";
   const [openAccordion, setOpenAccordion] = useState(0);
   const [productIndex, setProductIndex] = useState(0);
   const [industryIndex, setIndustryIndex] = useState(0);
@@ -96,19 +98,26 @@ export default function Home() {
   return (
     <main className="bg-white text-[#060606]">
       <section className="relative min-h-[92vh] overflow-hidden">
-        <img src={heroImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-black/65" />
-        <div className="relative mx-auto flex min-h-[92vh] w-full max-w-7xl flex-col justify-center px-5 py-24 text-center text-white md:px-8">
-          <h1 className="text-5xl leading-[0.95] tracking-tight md:text-7xl">Bán hàng thông minh hơn với Unipay</h1>
-          <p className="mx-auto mt-8 max-w-3xl text-base text-white/90 md:text-lg">UniPay tích hợp AI trực tiếp vào bán hàng, thanh toán và vận hành - giúp doanh nghiệp Việt vận hành hiệu quả hơn mỗi ngày trên một nền tảng duy nhất.</p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <Image src={heroImage} alt="" fill sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 bg-black/58" />
+        <div className={`${sectionContainer} relative flex min-h-[92vh] flex-col justify-center py-24 text-center text-white`}>
+          <p className="text-sm uppercase tracking-[0.2em] text-white/85 md:text-base">• Point of Sale & Operations •</p>
+          <h1 className="mt-4 text-5xl leading-[0.94] tracking-tight md:text-8xl">
+            <span className="font-serif italic">Bán hàng</span>
+            <br />
+            <span>thông minh hơn với Unipay</span>
+          </h1>
+          <div className="mx-auto mt-8 max-w-[640px] rounded-lg bg-black/35 px-4 py-3 backdrop-blur-[2px] md:px-6 md:py-4">
+            <p className="text-base text-white/90 md:text-lg">UniPay tích hợp AI trực tiếp vào bán hàng, thanh toán và vận hành - giúp doanh nghiệp Việt vận hành hiệu quả hơn mỗi ngày trên một nền tảng duy nhất.</p>
+          </div>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 md:gap-5">
             <button className="rounded-full bg-white px-8 py-3 text-base font-semibold text-[#006aff]">Bắt đầu với UniPay</button>
             <button className="rounded-full bg-[#006aff] px-8 py-3 text-base font-semibold text-white">Liên hệ tư vấn</button>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-5 py-24 md:px-8 md:py-32">
+      <section className={`${sectionContainer} flex flex-col gap-10 py-24 md:py-32`}>
         <div className="max-w-3xl">
           <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">Point of Sale & Operations</p>
           <h2 className="mt-3 text-4xl leading-tight tracking-tight md:text-5xl">Mọi thứ bạn cần để vận hành - kết nối trong một nền tảng.</h2>
@@ -117,7 +126,9 @@ export default function Home() {
         <div className="space-y-16">
           {featureList.map(([title, desc], idx) => (
             <div key={title} className="grid gap-10 border-t border-zinc-200 pt-10 md:grid-cols-[minmax(0,480px)_minmax(0,1fr)] md:gap-20">
-              <img src={featureImages[idx]} alt={title} className="h-72 w-full rounded-lg object-cover md:h-80" />
+              <div className="relative h-72 w-full md:h-80">
+                <Image src={featureImages[idx]} alt={title} fill sizes="(min-width: 768px) 480px, 100vw" className="rounded-lg object-cover" />
+              </div>
               <div className="max-w-xl">
                 <div className="flex items-start justify-between">
                   <span className="text-3xl font-semibold">{title}</span>
@@ -131,7 +142,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-7xl gap-16 px-5 py-24 md:grid-cols-[minmax(0,1fr)_minmax(0,600px)] md:px-8 md:py-32">
+      <section className={`${sectionContainer} grid gap-16 py-24 md:grid-cols-[minmax(0,1fr)_minmax(0,620px)] md:py-32`}>
         <div>
           <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">UniPay Intelligence</p>
           <h2 className="mt-3 text-4xl leading-tight tracking-tight md:text-5xl">Kinh doanh dựa trên dữ liệu</h2>
@@ -154,11 +165,11 @@ export default function Home() {
           </div>
         </div>
         <div className="relative flex items-center justify-center rounded-xl bg-zinc-100 p-3">
-          <img src={dataImage} alt="Dữ liệu kinh doanh" className="h-auto w-full rounded-md object-cover" />
+          <Image src={dataImage} alt="Dữ liệu kinh doanh" width={600} height={513} className="h-auto w-full rounded-md object-cover" />
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 py-24 md:px-8 md:py-32">
+      <section className={`${sectionContainer} flex flex-col gap-8 py-24 md:py-32`}>
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-4xl leading-tight tracking-tight md:text-5xl">Thiết kế bền bỉ - Chế tác tinh tế</h2>
           <p className="mt-4 text-lg text-zinc-600">Phần cứng tối giản, vật liệu cao cấp được thiết kế cho sự chính xác trong mọi thao tác.</p>
@@ -172,7 +183,7 @@ export default function Home() {
                   <p className="mt-4 text-zinc-700">{desc}</p>
                   <button className="mt-6 text-sm font-medium underline">Xem chi tiết</button>
                 </div>
-                <img src={productImage} alt={title} className="h-[390px] w-full rounded-xl object-cover" />
+                <Image src={productImage} alt={title} width={487} height={390} className="h-[390px] w-full rounded-xl object-cover" />
               </div>
             ))}
           </div>
@@ -184,13 +195,13 @@ export default function Home() {
       </section>
 
       <section className="relative flex h-[720px] items-center justify-center overflow-hidden">
-        <img src={videoImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <Image src={videoImage} alt="" fill sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-black/70" />
         <button className="relative z-10 rounded-full border border-white/40 bg-black/40 p-8 text-4xl text-white">▶</button>
       </section>
 
       <section className="bg-zinc-50 py-24 md:py-32">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-5 md:px-8">
+        <div className={`${sectionContainer} flex flex-col gap-10`}>
           <div className="flex items-end justify-between gap-8">
             <div className="max-w-3xl">
               <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">Built for every industry</p>
@@ -203,7 +214,7 @@ export default function Home() {
               const active = idx === industryIndex;
               return (
                 <div key={title} onMouseEnter={() => setIndustryIndex(idx)} className={`relative overflow-hidden rounded-lg transition-all duration-500 ${active ? "flex-4" : "flex-1"}`}>
-                  <img src={industryImages[idx]} alt={title} className="absolute inset-0 h-full w-full object-cover" />
+                  <Image src={industryImages[idx]} alt={title} fill sizes="(min-width: 768px) 25vw, 100vw" className="object-cover" />
                   <div className={`absolute inset-0 bg-linear-to-t from-black/70 to-black/20 transition-opacity duration-300 ${active ? "opacity-100" : "opacity-80"}`} />
                   <div className="absolute inset-x-0 bottom-0 p-5 text-white">
                     <h3 className={`font-medium tracking-tight transition-all duration-300 ${active ? "text-5xl" : "text-3xl text-white/70"}`}>{title}</h3>
@@ -216,7 +227,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-5 py-24 md:px-8 md:py-32">
+      <section className={`${sectionContainer} flex flex-col gap-10 py-24 md:py-32`}>
         <div className="flex flex-wrap items-end justify-between gap-8">
           <div className="max-w-3xl">
             <h2 className="text-4xl leading-tight tracking-tight md:text-5xl">Chọn cách bắt đầu phù hợp với doanh nghiệp của bạn</h2>
@@ -237,7 +248,7 @@ export default function Home() {
                     <h3 className="mt-16 text-4xl font-semibold">{title}</h3>
                     <p className="mt-3 max-w-xl text-zinc-700">{desc}</p>
                   </div>
-                  <img src={stepImages[idx]} alt={title} className="h-[376px] w-full rounded-t-3xl object-cover" />
+                  <Image src={stepImages[idx]} alt={title} width={400} height={376} className="h-[376px] w-full rounded-t-3xl object-cover" />
                 </article>
               </div>
             ))}
@@ -246,7 +257,7 @@ export default function Home() {
       </section>
 
       <section className="bg-zinc-50 py-24 md:py-32">
-        <div className="mx-auto w-full max-w-7xl px-5 md:px-8">
+        <div className={sectionContainer}>
           <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">Bảng giá</p>
           <h2 className="mt-3 text-4xl leading-tight tracking-tight md:text-5xl">Các gói dành cho doanh nghiệp</h2>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
@@ -272,7 +283,7 @@ export default function Home() {
       </section>
 
       <section className="bg-black py-24 md:py-32">
-        <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-16 px-5 md:px-8">
+        <div className={`${sectionContainer} flex flex-col items-center gap-16`}>
           <div className="text-center text-white">
             <h2 className="text-4xl leading-tight tracking-tight md:text-5xl">An toàn như ngân hàng</h2>
             <p className="mx-auto mt-4 max-w-4xl text-lg text-zinc-300">Được chứng nhận PCI DSS và ISO, hạ tầng của UniPay đảm bảo dữ liệu và thanh toán luôn an toàn, minh bạch và sẵn sàng 24/7 trên nền tảng điện toán đám mây.</p>
@@ -280,7 +291,7 @@ export default function Home() {
           <div className="grid w-full gap-8 md:grid-cols-4">
             {trustLogos.map((logo) => (
               <div key={logo.name} className="flex h-64 items-center justify-center rounded-3xl bg-white p-6">
-                <img src={`${basePath}/${logo.src}`} alt={logo.name} className="h-20 w-auto object-contain" />
+                <Image src={`${basePath}/${logo.src}`} alt={logo.name} width={256} height={128} className="h-28 w-auto object-contain md:h-32" />
               </div>
             ))}
           </div>
@@ -288,7 +299,7 @@ export default function Home() {
       </section>
 
       <section className="bg-black px-5 pb-24 md:px-8 md:pb-32">
-        <div className="mx-auto w-full max-w-7xl rounded-[40px] p-8 text-center text-white md:p-16" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(${bottomCtaImage})`, backgroundSize: "cover", backgroundPosition: "center" }}>
+        <div className="mx-auto w-full max-w-[1320px] rounded-[40px] p-8 text-center text-white md:p-16" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url(${bottomCtaImage})`, backgroundSize: "cover", backgroundPosition: "center" }}>
           <h2 className="text-5xl md:text-7xl">Sẵn sàng với UniPay.</h2>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <button className="rounded-full bg-[#006aff] px-8 py-3 text-lg font-medium text-white">Bắt đầu với UniPay</button>
@@ -298,17 +309,17 @@ export default function Home() {
       </section>
 
       <footer className="bg-black text-white">
-        <div className="mx-auto w-full max-w-7xl px-5 pb-6 pt-10 md:px-8">
-          <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
+        <div className="mx-auto w-full max-w-[1320px] px-5 pb-6 pt-12 md:px-8">
+          <div className="grid gap-10 md:grid-cols-[1.9fr_1fr_1fr_1fr_1fr] md:gap-8">
             <div>
-              <p className="text-xl font-semibold">CÔNG TY CỔ PHẦN GIẢI PHÁP THANH TOÁN UNIPAY</p>
-              <p className="mt-3 text-sm text-white/60">Tầng 2, Tòa nhà Saigon Paragon, Số 03 Nguyễn Lương Bằng, Phường Tân Mỹ, TP Hồ Chí Minh, Việt Nam</p>
-              <p className="mt-4 text-sm">contact@unipay.net.vn · 02873096667</p>
+              <p className="max-w-md text-[22px] font-semibold leading-tight">CÔNG TY CỔ PHẦN GIẢI PHÁP THANH TOÁN UNIPAY</p>
+              <p className="mt-4 max-w-lg text-sm leading-6 text-white/60">Tầng 2, Tòa nhà Saigon Paragon, Số 03 Nguyễn Lương Bằng, Phường Tân Mỹ, TP Hồ Chí Minh, Việt Nam</p>
+              <p className="mt-5 text-sm text-white/85">contact@unipay.net.vn · 02873096667</p>
             </div>
-            <div><p className="text-white/60">Giải pháp Unipay</p><p className="mt-3 text-sm">Giải pháp thanh toán</p><p className="mt-2 text-sm">Giải pháp quản lý kinh doanh</p><p className="mt-2 text-sm">Giải pháp thiết bị thanh toán</p></div>
-            <div><p className="text-white/60">Giải pháp theo ngành</p><p className="mt-3 text-sm">F&B</p><p className="mt-2 text-sm">Bán lẻ</p><p className="mt-2 text-sm">Dịch vụ</p><p className="mt-2 text-sm">Giáo dục</p></div>
-            <div><p className="text-white/60">Thiết bị</p><p className="mt-3 text-sm">Smart POS cầm tay</p><p className="mt-2 text-sm">Duo Screen POS</p><p className="mt-2 text-sm">Thiết bị hiển thị QR</p><p className="mt-2 text-sm">Soundbox</p></div>
-            <div><p className="text-white/60">Công ty</p><p className="mt-3 text-sm">Về chúng tôi</p><p className="mt-2 text-sm">Liên hệ</p></div>
+            <div><p className="text-base font-semibold text-white/60">Giải pháp Unipay</p><p className="mt-4 text-sm text-white/90">Giải pháp thanh toán</p><p className="mt-2.5 text-sm text-white/90">Giải pháp quản lý kinh doanh</p><p className="mt-2.5 text-sm text-white/90">Giải pháp thiết bị thanh toán</p></div>
+            <div><p className="text-base font-semibold text-white/60">Giải pháp theo ngành</p><p className="mt-4 text-sm text-white/90">F&B</p><p className="mt-2.5 text-sm text-white/90">Bán lẻ</p><p className="mt-2.5 text-sm text-white/90">Dịch vụ</p><p className="mt-2.5 text-sm text-white/90">Giáo dục</p></div>
+            <div><p className="text-base font-semibold text-white/60">Thiết bị</p><p className="mt-4 text-sm text-white/90">Smart POS cầm tay</p><p className="mt-2.5 text-sm text-white/90">Duo Screen POS</p><p className="mt-2.5 text-sm text-white/90">Thiết bị hiển thị QR</p><p className="mt-2.5 text-sm text-white/90">Soundbox</p></div>
+            <div><p className="text-base font-semibold text-white/60">Công ty</p><p className="mt-4 text-sm text-white/90">Về chúng tôi</p><p className="mt-2.5 text-sm text-white/90">Liên hệ</p></div>
           </div>
           <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/20 pt-6 text-sm text-white/80">
             <div className="flex flex-wrap gap-5"><span>© Unipay Ltd 2025</span><span>Term & Conditions</span><span>Privacy Policy</span><span>Cookies Policy</span></div>
