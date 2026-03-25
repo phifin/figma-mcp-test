@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
+import { withBasePath } from "@/lib/base-path";
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 const lerp = (start: number, end: number, progress: number) => start + (end - start) * progress;
@@ -102,7 +103,7 @@ export default function CTASection() {
           >
             <div className="absolute inset-0">
               <Image
-                src="/images/ready-with-unipay-small.png"
+                src={withBasePath("/images/ready-with-unipay-small.png")}
                 alt=""
                 fill
                 sizes="(max-width: 767px) calc(100vw - 56px), (max-width: 1023px) calc(100vw - 80px), calc(100vw - 112px)"
@@ -110,7 +111,7 @@ export default function CTASection() {
                 style={{ opacity: smallImageOpacity, transform: `scale(${lerp(1, 1.03, easedProgress)})` }}
               />
               <Image
-                src="/images/ready-with-unipay.png"
+                src={withBasePath("/images/ready-with-unipay.png")}
                 alt=""
                 fill
                 sizes="(max-width: 767px) calc(100vw - 56px), (max-width: 1023px) calc(100vw - 80px), calc(100vw - 112px)"

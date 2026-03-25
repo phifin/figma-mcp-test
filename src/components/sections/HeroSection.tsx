@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
+import { withBasePath } from "@/lib/base-path";
 import { heroImage, sectionContainer } from "@/lib/landing-content";
 
 export default function HeroSection() {
@@ -33,7 +34,7 @@ export default function HeroSection() {
 
   return (
     <section className="ui-section relative min-h-[92vh] overflow-hidden">
-      <Image src={heroImage} alt="" fill sizes="100vw" className="object-cover" />
+      <Image src={withBasePath(heroImage)} alt="" fill sizes="100vw" className="object-cover" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,10,24,0.46)_0%,rgba(4,10,24,0.68)_58%,rgba(4,10,24,0.8)_100%)]" />
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-white/12" />
       <div

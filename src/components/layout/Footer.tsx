@@ -1,17 +1,16 @@
 import Image from "next/image";
 
+import { withBasePath } from "@/lib/base-path";
 import { sectionContainer } from "@/lib/landing-content";
 
 export default function Footer() {
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-
   return (
     <footer className="bg-black text-white">
       <div className={`${sectionContainer} pb-6 pt-12`}>
         <div className="grid gap-12 md:grid-cols-[minmax(680px,1.7fr)_minmax(0,0.85fr)] md:items-start md:gap-14 lg:gap-18">
           <div className="max-w-none">
             <Image
-              src={`${basePath}/unipay-logo.svg`}
+              src={withBasePath("/unipay-logo.svg")}
               alt="Unipay logo"
               width={100}
               height={40}

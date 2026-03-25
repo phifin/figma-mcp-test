@@ -5,10 +5,10 @@ import Image from "next/image";
 
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { withBasePath } from "@/lib/base-path";
 import { sectionContainer, trustLogos } from "@/lib/landing-content";
 
 export default function SecuritySection() {
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const [expanded, setExpanded] = useState(false);
   const [animateSpread, setAnimateSpread] = useState(false);
 
@@ -49,7 +49,7 @@ export default function SecuritySection() {
                   style={{ transitionDelay: `${idx * 80}ms` }}
                 >
                   <div className="interactive-card flex h-56 items-center justify-center rounded-[24px] border border-white/12 bg-white p-2 shadow-[0_18px_44px_rgba(0,0,0,0.22)] md:h-60 md:p-3">
-                    <Image src={`${basePath}/${logo.src}`} alt={logo.name} width={320} height={200} className="h-full w-full object-contain" />
+                    <Image src={withBasePath(logo.src)} alt={logo.name} width={320} height={200} className="h-full w-full object-contain" />
                   </div>
                 </div>
               ))}
@@ -63,7 +63,7 @@ export default function SecuritySection() {
             >
               <div className="w-full max-w-[286px] md:max-w-[280px]">
                 <div className="interactive-card flex h-56 items-center justify-center rounded-[24px] border border-white/12 bg-white p-2 shadow-[0_18px_44px_rgba(0,0,0,0.22)] md:h-60 md:p-3">
-                  <Image src={`${basePath}/${defaultLogo.src}`} alt={defaultLogo.name} width={320} height={200} className="h-full w-full object-contain" />
+                  <Image src={withBasePath(defaultLogo.src)} alt={defaultLogo.name} width={320} height={200} className="h-full w-full object-contain" />
                 </div>
               </div>
             </div>
