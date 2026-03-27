@@ -26,8 +26,10 @@ export default function FeatureSection() {
                   <span className="ui-eyebrow text-xs tracking-[0.2em] opacity-70 transition-opacity duration-[560ms] ease-out [transition-delay:120ms] group-hover:opacity-100">{String(idx + 1).padStart(2, "0")}</span>
                 </div>
                 <p className="ui-body mt-4 text-lg">{desc}</p>
-                <button className="link-animated mt-5 text-sm font-semibold">
-                  Tìm hiểu thêm
+                <button className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)] transition-colors duration-[200ms] ease-out hover:text-[var(--brand-strong)]">
+                  <span className="relative inline-block after:absolute after:-bottom-[0.15rem] after:left-0 after:h-[1.5px] after:w-full after:bg-current after:content-['']">
+                    Tìm hiểu thêm
+                  </span>
                   <span className="link-arrow">→</span>
                 </button>
               </Reveal>

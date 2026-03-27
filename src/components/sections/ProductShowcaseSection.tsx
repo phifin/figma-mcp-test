@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
+import { withBasePath } from "@/lib/base-path";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { productImage, productSlides, sectionContainer, sectionSpacing } from "@/lib/landing-content";
+import { productSlides, sectionContainer, sectionSpacing } from "@/lib/landing-content";
 
 export default function ProductShowcaseSection() {
   const [productIndex, setProductIndex] = useState(0);
@@ -36,12 +37,20 @@ export default function ProductShowcaseSection() {
               <div className={`interactive-card rounded-[24px] bg-[var(--surface-subtle)] p-6 transition-all duration-[260ms] ease-out ${settledIndex === idx ? "translate-y-0 opacity-100 [transition-delay:100ms]" : "translate-y-3 opacity-0"}`}>
                 <h3 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)]">{title}</h3>
                 <p className="ui-body mt-4">{desc}</p>
-                <button className="link-animated mt-6 text-sm font-medium">
-                  Xem chi tiết
+                <button className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] transition-colors duration-[200ms] ease-out hover:text-[var(--brand-strong)]">
+                  <span className="relative inline-block after:absolute after:-bottom-[0.15rem] after:left-0 after:h-[1.5px] after:w-full after:bg-current after:content-['']">
+                    Xem chi tiết
+                  </span>
                   <span className="link-arrow">→</span>
                 </button>
               </div>
-              <Image src={productImage} alt={title} width={487} height={390} className="h-[390px] w-full rounded-[24px] object-cover shadow-[var(--shadow-soft)]" />
+              <Image
+                src={withBasePath(`/images/product-showcase/${idx + 1}.png`)}
+                alt={title}
+                width={487}
+                height={390}
+                className="h-[390px] w-full rounded-[24px] object-cover shadow-[var(--shadow-soft)]"
+              />
             </div>
           ))}
         </div>

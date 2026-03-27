@@ -21,10 +21,10 @@ export default function PricingSection() {
           {pricing.map(([name, desc, price, unit, suffix, cta], idx) => (
             <Reveal key={name} delay={idx * 80}>
               <article
-                className={`interactive-card flex h-[520px] flex-col rounded-[24px]  p-6 ${
+                className={`flex h-[520px] flex-col rounded-[24px] p-6 ${
                   idx === 1
-                    ? "border-blue-800 border-[3px] bg-white shadow-[0_24px_64px_rgba(37,99,235,0.16)]"
-                    : "border-[rgba(15,23,42,0.16)] bg-[rgba(255,255,255,0.9)] shadow-[0_18px_42px_rgba(15,23,42,0.05)]"
+                    ? "border-blue-800 border-[3px] bg-white shadow-[0_24px_64px_rgba(37,99,235,0.16)] transition-[transform,box-shadow] duration-[200ms] ease-out hover:-translate-y-0.5 hover:shadow-[0_28px_72px_rgba(37,99,235,0.18)]"
+                    : "interactive-card border-[rgba(15,23,42,0.16)] bg-[rgba(255,255,255,0.9)] shadow-[0_18px_42px_rgba(15,23,42,0.05)]"
                 }`}
               >
                 <div>

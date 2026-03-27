@@ -85,7 +85,7 @@ export default function StepSliderSection() {
                 >
                   <article className="grid min-h-[500px] items-center gap-10 overflow-hidden rounded-[32px] border border-[rgba(15,23,42,0.08)] bg-[#f4f5f1] px-8 py-8 shadow-[0_22px_56px_rgba(15,23,42,0.08)] md:grid-cols-[minmax(0,1fr)_minmax(420px,520px)] md:gap-12 md:px-14 md:py-14">
                     <div className="flex flex-col justify-center">
-                      <p className="text-7xl font-bold tracking-tight text-[var(--brand)] md:text-[88px]">{no}</p>
+                      <p className="text-7xl font-bold tracking-tight text-[var(--text-primary)] md:text-[88px]">{no}</p>
                       <h3 className="mt-12 text-4xl font-semibold tracking-tight text-[var(--text-primary)] md:text-[44px]">{title}</h3>
                       <p className="ui-body mt-3 max-w-xl">{desc}</p>
                     </div>
