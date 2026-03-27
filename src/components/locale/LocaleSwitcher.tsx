@@ -10,6 +10,7 @@ import { withBasePath } from "@/lib/base-path";
 type LocaleSwitcherProps = {
   locale: Locale;
   label: string;
+  className?: string;
 };
 
 function getLocalizedPathname(pathname: string, nextLocale: Locale) {
@@ -26,6 +27,7 @@ function getLocalizedPathname(pathname: string, nextLocale: Locale) {
 export default function LocaleSwitcher({
   locale,
   label,
+  className = "hidden md:inline-flex",
 }: LocaleSwitcherProps) {
   const pathname = usePathname() ?? "/";
   const nextLocale = locale === "vi" ? "en" : "vi";
@@ -35,7 +37,7 @@ export default function LocaleSwitcher({
     <Link
       href={href}
       aria-label={`${label}: ${nextLocale.toUpperCase()}`}
-      className="hidden items-center justify-center p-0 transition-transform duration-[200ms] ease-out hover:scale-[1.04] md:inline-flex"
+      className={`${className} items-center justify-center p-0 transition-transform duration-[200ms] ease-out hover:scale-[1.04]`}
     >
       <Image
         src={withBasePath(`/images/locales/${locale}.svg`)}

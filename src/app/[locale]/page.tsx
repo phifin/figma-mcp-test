@@ -11,12 +11,17 @@ import ProductShowcaseSection from "@/components/sections/ProductShowcaseSection
 import SecuritySection from "@/components/sections/SecuritySection";
 import StepSliderSection from "@/components/sections/StepSliderSection";
 import VideoSection from "@/components/sections/VideoSection";
+import { locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { getLocaleFromParam } from "@/i18n/routing";
 
 type LocalePageProps = {
   params: Promise<{ locale: string }>;
 };
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 
 export async function generateMetadata({
   params,
@@ -52,4 +57,3 @@ export default async function Home({ params }: LocalePageProps) {
     </main>
   );
 }
-

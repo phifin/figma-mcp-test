@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -7,12 +8,13 @@ import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
 import type { Dictionary } from "@/i18n/types";
 import { withBasePath } from "@/lib/base-path";
-import {
-  sectionContainer,
-  sectionSpacing,
-} from "@/lib/landing-content";
+import { sectionContainer, sectionSpacing } from "@/lib/landing-content";
 
-const IMAGE_TRANSITION_MS = 2000;
+const IMAGE_TRANSITION_MS = 1000000;
+const TEXT_TRANSITION_MS = Math.max(
+  340,
+  Math.min(IMAGE_TRANSITION_MS * 0.48, 1400),
+);
 
 type ProductShowcaseSectionProps = {
   content: Dictionary["productShowcase"];
@@ -26,7 +28,6 @@ export default function ProductShowcaseSection({
   const [previousImageIndex, setPreviousImageIndex] = useState<number | null>(
     null,
   );
-  const [direction, setDirection] = useState<1 | -1>(1);
   const [imageTransitionActive, setImageTransitionActive] = useState(false);
   const [textVisible, setTextVisible] = useState(true);
   const [textEntering, setTextEntering] = useState(true);
@@ -74,7 +75,6 @@ export default function ProductShowcaseSection({
       contentTimeoutRef.current = null;
     }
 
-    setDirection(nextDirection);
     setPreviousImageIndex(productIndex);
     setProductIndex(nextIndex);
     setImageTransitionActive(false);
@@ -92,7 +92,7 @@ export default function ProductShowcaseSection({
         });
       });
       contentTimeoutRef.current = null;
-    }, 130);
+    }, 120);
   };
 
   const prevProduct = () =>
@@ -112,6 +112,12 @@ export default function ProductShowcaseSection({
     previousImageIndex !== null
       ? withBasePath(`/images/product-showcase/${previousImageIndex + 1}.png`)
       : null;
+  const imageTransitionStyle: CSSProperties = {
+    transitionDuration: `${IMAGE_TRANSITION_MS}ms`,
+  };
+  const textTransitionStyle: CSSProperties = {
+    transitionDuration: `${TEXT_TRANSITION_MS}ms`,
+  };
 
   return (
     <section
@@ -129,6 +135,7 @@ export default function ProductShowcaseSection({
               <div className="relative min-h-[220px]">
                 <div
                   key={contentIndex}
+                  style={textTransitionStyle}
                   className={`absolute inset-0 transition-[opacity,transform] duration-[340ms] ease-out ${
                     textVisible
                       ? textEntering
@@ -140,7 +147,8 @@ export default function ProductShowcaseSection({
                   <h3 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
                     {title}
                   </h3>
-                  <p className="ui-body mt-4">{description}</p>
+                  <div className="mt-5 h-px w-full bg-[rgba(15,23,42,0.18)]" />
+                  <p className="ui-body mt-5">{description}</p>
                   <button className="group mt-6 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-[var(--text-primary)] transition-colors duration-[200ms] ease-out hover:text-[var(--brand-strong)]">
                     <span className="relative inline-block after:absolute after:-bottom-[0.15rem] after:left-0 after:h-[1.5px] after:w-full after:bg-current after:content-['']">
                       {content.viewDetails}
@@ -188,6 +196,7 @@ export default function ProductShowcaseSection({
                   alt={title}
                   fill
                   sizes="(min-width: 768px) 40vw, 100vw"
+                  style={imageTransitionStyle}
                   className={`object-contain object-center p-5 transition-[opacity,transform] duration-[1280ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,transform] md:p-7 ${
                     imageTransitionActive
                       ? "translate-y-[4px] opacity-0"
@@ -208,6 +217,7 @@ export default function ProductShowcaseSection({
                     });
                   }
                 }}
+                style={imageTransitionStyle}
                 className={`object-contain object-center p-5 transition-[opacity,transform] duration-[1280ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,transform] md:p-7 ${
                   previousImageIndex === null
                     ? "translate-y-0 opacity-100"
