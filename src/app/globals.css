@@ -62,6 +62,12 @@ a {
     opacity var(--motion-fast) ease-out;
 }
 
+button:not(:disabled),
+a[href],
+[role="button"] {
+  cursor: pointer;
+}
+
 img {
   backface-visibility: hidden;
 }

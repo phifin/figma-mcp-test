@@ -26,11 +26,21 @@ export default function FeatureSection() {
                   <span className="ui-eyebrow text-xs tracking-[0.2em] opacity-70 transition-opacity duration-[560ms] ease-out [transition-delay:120ms] group-hover:opacity-100">{String(idx + 1).padStart(2, "0")}</span>
                 </div>
                 <p className="ui-body mt-4 text-lg">{desc}</p>
-                <button className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)] transition-colors duration-[200ms] ease-out hover:text-[var(--brand-strong)]">
+                <button className="group mt-5 inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-[var(--text-primary)] transition-colors duration-[200ms] ease-out hover:text-[var(--brand-strong)]">
                   <span className="relative inline-block after:absolute after:-bottom-[0.15rem] after:left-0 after:h-[1.5px] after:w-full after:bg-current after:content-['']">
                     Tìm hiểu thêm
                   </span>
-                  <span className="link-arrow">→</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    aria-hidden="true"
+                    className="transition-transform duration-[200ms] ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  >
+                    <path d="M4 10L10 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                    <path d="M5.25 4H10V8.75" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </button>
               </Reveal>
             </div>

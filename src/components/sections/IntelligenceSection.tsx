@@ -32,7 +32,7 @@ export default function IntelligenceSection() {
 
             return (
               <div key={title} className="py-5">
-                <button className="flex w-full items-center justify-between gap-4 text-left" onClick={() => toggleAccordion(idx)}>
+                <button className="flex w-full cursor-pointer items-center justify-between gap-4 text-left" onClick={() => toggleAccordion(idx)}>
                   <span className="text-2xl font-semibold tracking-tight text-[var(--text-primary)]">{title}</span>
                   <span className="relative block h-7 w-7 shrink-0 text-[var(--text-primary)]" aria-hidden="true">
                     <span className="absolute left-1/2 top-1/2 h-[2.5px] w-5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-current" />

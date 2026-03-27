@@ -1,66 +1,270 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
-import { withBasePath } from "@/lib/base-path";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { productSlides, sectionContainer, sectionSpacing } from "@/lib/landing-content";
+import { withBasePath } from "@/lib/base-path";
+import {
+  productSlides,
+  sectionContainer,
+  sectionSpacing,
+} from "@/lib/landing-content";
+
+const IMAGE_TRANSITION_MS = 2000;
 
 export default function ProductShowcaseSection() {
   const [productIndex, setProductIndex] = useState(0);
-  const [settledIndex, setSettledIndex] = useState(0);
+  const [contentIndex, setContentIndex] = useState(0);
+  const [previousImageIndex, setPreviousImageIndex] = useState<number | null>(
+    null,
+  );
+  const [direction, setDirection] = useState<1 | -1>(1);
+  const [imageTransitionActive, setImageTransitionActive] = useState(false);
+  const [textVisible, setTextVisible] = useState(true);
+  const [textEntering, setTextEntering] = useState(true);
+  const [incomingImageReady, setIncomingImageReady] = useState(true);
+  const imageTimeoutRef = useRef<number | null>(null);
+  const contentTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      setSettledIndex(productIndex);
-    }, 460);
+    return () => {
+      if (imageTimeoutRef.current !== null) {
+        window.clearTimeout(imageTimeoutRef.current);
+      }
+      if (contentTimeoutRef.current !== null) {
+        window.clearTimeout(contentTimeoutRef.current);
+      }
+    };
+  }, []);
 
-    return () => window.clearTimeout(timeout);
-  }, [productIndex]);
+  useEffect(() => {
+    if (!imageTransitionActive || previousImageIndex === null) return;
 
-  const prevProduct = () => setProductIndex((p) => (p - 1 + productSlides.length) % productSlides.length);
-  const nextProduct = () => setProductIndex((p) => (p + 1) % productSlides.length);
+    imageTimeoutRef.current = window.setTimeout(() => {
+      setPreviousImageIndex(null);
+      setImageTransitionActive(false);
+      imageTimeoutRef.current = null;
+    }, IMAGE_TRANSITION_MS);
+
+    return () => {
+      if (imageTimeoutRef.current !== null) {
+        window.clearTimeout(imageTimeoutRef.current);
+        imageTimeoutRef.current = null;
+      }
+    };
+  }, [imageTransitionActive, previousImageIndex]);
+
+  const goToProduct = (nextIndex: number, nextDirection: 1 | -1) => {
+    if (nextIndex === productIndex) return;
+
+    if (imageTimeoutRef.current !== null) {
+      window.clearTimeout(imageTimeoutRef.current);
+      imageTimeoutRef.current = null;
+    }
+    if (contentTimeoutRef.current !== null) {
+      window.clearTimeout(contentTimeoutRef.current);
+      contentTimeoutRef.current = null;
+    }
+
+    setDirection(nextDirection);
+    setPreviousImageIndex(productIndex);
+    setProductIndex(nextIndex);
+    setImageTransitionActive(false);
+    setIncomingImageReady(false);
+    setTextVisible(false);
+    setTextEntering(true);
+
+    contentTimeoutRef.current = window.setTimeout(() => {
+      setContentIndex(nextIndex);
+      setTextVisible(true);
+      setTextEntering(false);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTextEntering(true);
+        });
+      });
+      contentTimeoutRef.current = null;
+    }, 130);
+  };
+
+  const prevProduct = () =>
+    goToProduct(
+      (productIndex - 1 + productSlides.length) % productSlides.length,
+      -1,
+    );
+  const nextProduct = () =>
+    goToProduct((productIndex + 1) % productSlides.length, 1);
+
+  const [title, desc] = productSlides[contentIndex];
+  const progressWidth = `${((productIndex + 1) / productSlides.length) * 100}%`;
+  const currentImage = withBasePath(
+    `/images/product-showcase/${productIndex + 1}.png`,
+  );
+  const previousImage =
+    previousImageIndex !== null
+      ? withBasePath(`/images/product-showcase/${previousImageIndex + 1}.png`)
+      : null;
 
   return (
-    <section className={`ui-section ui-divider ${sectionContainer} ${sectionSpacing} flex flex-col gap-8`}>
+    <section
+      className={`ui-section ui-divider ${sectionContainer} ${sectionSpacing} flex flex-col gap-8`}
+    >
       <SectionHeading
         centered
         title="Thiết kế bền bỉ - Chế tác tinh tế"
         description="Phần cứng tối giản, vật liệu cao cấp được thiết kế cho sự chính xác trong mọi thao tác."
       />
-      <Reveal className="surface-card relative overflow-hidden p-4 md:p-5">
-        <div className="flex transition-transform duration-[420ms] ease-in-out" style={{ transform: `translateX(-${productIndex * 100}%)` }}>
-          {productSlides.map(([title, desc], idx) => (
-            <div key={title} className="grid min-w-full gap-8 md:grid-cols-[minmax(0,1fr)_487px] md:gap-12">
-              <div className={`interactive-card rounded-[24px] bg-[var(--surface-subtle)] p-6 transition-all duration-[260ms] ease-out ${settledIndex === idx ? "translate-y-0 opacity-100 [transition-delay:100ms]" : "translate-y-3 opacity-0"}`}>
-                <h3 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)]">{title}</h3>
-                <p className="ui-body mt-4">{desc}</p>
-                <button className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] transition-colors duration-[200ms] ease-out hover:text-[var(--brand-strong)]">
-                  <span className="relative inline-block after:absolute after:-bottom-[0.15rem] after:left-0 after:h-[1.5px] after:w-full after:bg-current after:content-['']">
-                    Xem chi tiết
-                  </span>
-                  <span className="link-arrow">→</span>
-                </button>
+      <Reveal className="relative rounded-[32px] border border-[rgba(15,23,42,0.08)] bg-[rgba(255,255,255,0.54)]">
+        <div className="px-4 pb-4 pt-4 md:px-5 md:pb-5 md:pt-5">
+          <div className="grid gap-8 rounded-[26px] pb-12 md:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] md:gap-12 md:pb-14">
+            <div className="surface-card flex min-h-[390px] flex-col rounded-[24px] p-6">
+              <div className="relative min-h-[220px]">
+                <div
+                  key={contentIndex}
+                  className={`absolute inset-0 transition-[opacity,transform] duration-[340ms] ease-out ${
+                    textVisible
+                      ? textEntering
+                        ? "translate-y-0 opacity-100"
+                        : "translate-y-[10px] opacity-0"
+                      : "translate-y-0 opacity-0"
+                  }`}
+                >
+                  <h3 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
+                    {title}
+                  </h3>
+                  <p className="ui-body mt-4">{desc}</p>
+                  <button className="group mt-6 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-[var(--text-primary)] transition-colors duration-[200ms] ease-out hover:text-[var(--brand-strong)]">
+                    <span className="relative inline-block after:absolute after:-bottom-[0.15rem] after:left-0 after:h-[1.5px] after:w-full after:bg-current after:content-['']">
+                      Xem chi tiết
+                    </span>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      aria-hidden="true"
+                      className="transition-transform duration-[200ms] ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    >
+                      <path
+                        d="M4 10L10 4"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M5.25 4H10V8.75"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
+
+              <div className="mt-auto pt-8">
+                <div className="h-[2px] w-full rounded-full bg-[rgba(15,23,42,0.08)]">
+                  <div
+                    className="h-full rounded-full bg-[var(--text-primary)] transition-[width] duration-[420ms] ease-in-out"
+                    style={{ width: progressWidth }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="relative min-h-[390px] overflow-hidden rounded-[24px]">
+              {previousImage ? (
+                <Image
+                  src={previousImage}
+                  alt={title}
+                  fill
+                  sizes="(min-width: 768px) 40vw, 100vw"
+                  className={`object-contain object-center p-5 transition-[opacity,transform] duration-[1280ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,transform] md:p-7 ${
+                    imageTransitionActive
+                      ? "translate-y-[4px] opacity-0"
+                      : "translate-y-0 opacity-100"
+                  }`}
+                />
+              ) : null}
               <Image
-                src={withBasePath(`/images/product-showcase/${idx + 1}.png`)}
+                src={currentImage}
                 alt={title}
-                width={487}
-                height={390}
-                className="h-[390px] w-full rounded-[24px] object-cover shadow-[var(--shadow-soft)]"
+                fill
+                sizes="(min-width: 768px) 40vw, 100vw"
+                onLoad={() => {
+                  if (!incomingImageReady && previousImageIndex !== null) {
+                    setIncomingImageReady(true);
+                    requestAnimationFrame(() => {
+                      setImageTransitionActive(true);
+                    });
+                  }
+                }}
+                className={`object-contain object-center p-5 transition-[opacity,transform] duration-[1280ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,transform] md:p-7 ${
+                  previousImageIndex === null
+                    ? "translate-y-0 opacity-100"
+                    : incomingImageReady && imageTransitionActive
+                      ? "translate-y-0 opacity-100"
+                      : "translate-y-[4px] opacity-0"
+                }`}
               />
             </div>
-          ))}
+          </div>
         </div>
-        <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 rounded-t-full border border-[var(--border-subtle)] bg-white/92 shadow-[var(--shadow-soft)] backdrop-blur-sm">
-          <button onClick={prevProduct} className="h-10 w-12 rounded-tl-full text-xl text-[var(--text-primary)] hover:text-[var(--brand)]">
-            ←
-          </button>
-          <button onClick={nextProduct} className="h-10 w-12 rounded-tr-full text-xl text-[var(--text-primary)] hover:text-[var(--brand)]">
-            →
-          </button>
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex justify-center">
+          <div className="pointer-events-auto relative -mb-px translate-y-1/2">
+            <div
+              className="absolute inset-x-0 -top-3 bottom-1/2 rounded-t-full bg-white"
+              aria-hidden="true"
+            />
+            <div className="relative flex items-center gap-1 rounded-full border border-[rgba(15,23,42,0.08)] bg-white p-1">
+              <button
+                onClick={prevProduct}
+                aria-label="Sản phẩm trước"
+                className="grid h-10 w-10 cursor-pointer place-items-center rounded-full text-[var(--text-primary)] transition-all duration-[200ms] ease-out hover:bg-[var(--surface-subtle)] hover:text-[var(--brand)]"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M14.5 6.5L9 12L14.5 17.5"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={nextProduct}
+                aria-label="Sản phẩm tiếp theo"
+                className="grid h-10 w-10 cursor-pointer place-items-center rounded-full text-[var(--text-primary)] transition-all duration-[200ms] ease-out hover:bg-[var(--surface-subtle)] hover:text-[var(--brand)]"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M9.5 6.5L15 12L9.5 17.5"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </Reveal>
     </section>

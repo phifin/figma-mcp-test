@@ -14,5 +14,5 @@ export default function Button({ children, variant = "primary", className = "" }
         ? "btn-secondary-dark"
         : "btn-secondary";
 
-  return <button className={`btn-pill ${variantClass} ${className}`}>{children}</button>;
+  return <button className={`btn-pill cursor-pointer ${variantClass} ${className}`}>{children}</button>;
 }
