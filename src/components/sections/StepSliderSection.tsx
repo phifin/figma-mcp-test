@@ -5,20 +5,25 @@ import Image from "next/image";
 
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { sectionContainer, sectionSpacing, stepImages, steps } from "@/lib/landing-content";
+import type { Dictionary } from "@/i18n/types";
+import { sectionContainer, sectionSpacing, stepImages } from "@/lib/landing-content";
 
-export default function StepSliderSection() {
+type StepSliderSectionProps = {
+  content: Dictionary["steps"];
+};
+
+export default function StepSliderSection({ content }: StepSliderSectionProps) {
   const [stepIndex, setStepIndex] = useState(0);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [viewportWidth, setViewportWidth] = useState(0);
 
   useEffect(() => {
     const id = setInterval(() => {
-      setStepIndex((prev) => (prev + 1) % steps.length);
+      setStepIndex((prev) => (prev + 1) % content.items.length);
     }, 3500);
 
     return () => clearInterval(id);
-  }, []);
+  }, [content.items.length]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -33,26 +38,26 @@ export default function StepSliderSection() {
     return () => observer.disconnect();
   }, []);
 
-  const prevStep = () => setStepIndex((s) => (s - 1 + steps.length) % steps.length);
-  const nextStep = () => setStepIndex((s) => (s + 1) % steps.length);
+  const prevStep = () => setStepIndex((s) => (s - 1 + content.items.length) % content.items.length);
+  const nextStep = () => setStepIndex((s) => (s + 1) % content.items.length);
   const isDesktop = viewportWidth >= 768;
   const previewWidth = viewportWidth ? (isDesktop ? 96 : 36) : 96;
   const slideGap = isDesktop ? 24 : 16;
   const slideWidth = viewportWidth ? Math.max(viewportWidth - previewWidth, 0) : 0;
   const translateX = slideWidth ? stepIndex * (slideWidth + slideGap) : 0;
-  const slidesWithPreview = [...steps.map((step, idx) => ({ step, image: stepImages[idx], clone: false })), { step: steps[0], image: stepImages[0], clone: true }];
+  const slidesWithPreview = [...content.items.map((step, idx) => ({ step, image: stepImages[idx], clone: false })), { step: content.items[0], image: stepImages[0], clone: true }];
 
   return (
     <section className={`ui-section ui-divider ${sectionContainer} ${sectionSpacing} flex flex-col gap-10`}>
       <div className="flex flex-wrap items-end justify-between gap-8">
         <SectionHeading
-          title="Chọn cách bắt đầu phù hợp với doanh nghiệp của bạn"
-          description="Từ cửa hàng nhỏ đến chuỗi nhiều điểm bán, UniPay giúp bạn bắt đầu nhanh, triển khai đơn giản và mở rộng theo nhu cầu thực tế."
+          title={content.title}
+          description={content.description}
         />
         <Reveal delay={180} className="flex gap-2.5">
           <button
             onClick={prevStep}
-            aria-label="Bước trước"
+            aria-label={content.previousLabel}
             className="grid h-11 w-11 place-items-center rounded-full border border-[rgba(15,23,42,0.1)] bg-[rgba(246,248,251,0.92)] text-[var(--text-primary)] transition-all duration-300 ease-out hover:border-[rgba(37,99,235,0.18)] hover:bg-white hover:text-[var(--brand)]"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -61,7 +66,7 @@ export default function StepSliderSection() {
           </button>
           <button
             onClick={nextStep}
-            aria-label="Bước tiếp theo"
+            aria-label={content.nextLabel}
             className="grid h-11 w-11 place-items-center rounded-full border border-[rgba(15,23,42,0.1)] bg-[rgba(246,248,251,0.92)] text-[var(--text-primary)] transition-all duration-300 ease-out hover:border-[rgba(37,99,235,0.18)] hover:bg-white hover:text-[var(--brand)]"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -74,7 +79,7 @@ export default function StepSliderSection() {
         <div ref={viewportRef} className="overflow-hidden rounded-[32px]">
           <div className="flex gap-4 transition-transform duration-[420ms] ease-in-out md:gap-6" style={{ transform: `translateX(-${translateX}px)` }}>
             {slidesWithPreview.map(({ step, image, clone }, idx) => {
-              const [no, title, desc] = step;
+              const { number, title, description } = step;
               const isActive = idx === stepIndex;
 
               return (
@@ -85,9 +90,9 @@ export default function StepSliderSection() {
                 >
                   <article className="grid min-h-[500px] items-center gap-10 overflow-hidden rounded-[32px] border border-[rgba(15,23,42,0.08)] bg-[#f4f5f1] px-8 py-8 shadow-[0_22px_56px_rgba(15,23,42,0.08)] md:grid-cols-[minmax(0,1fr)_minmax(420px,520px)] md:gap-12 md:px-14 md:py-14">
                     <div className="flex flex-col justify-center">
-                      <p className="text-7xl font-bold tracking-tight text-[var(--text-primary)] md:text-[88px]">{no}</p>
+                      <p className="text-7xl font-bold tracking-tight text-[var(--text-primary)] md:text-[88px]">{number}</p>
                       <h3 className="mt-12 text-4xl font-semibold tracking-tight text-[var(--text-primary)] md:text-[44px]">{title}</h3>
-                      <p className="ui-body mt-3 max-w-xl">{desc}</p>
+                      <p className="ui-body mt-3 max-w-xl">{description}</p>
                     </div>
                     <div className="relative h-[320px] w-full self-stretch overflow-hidden rounded-[26px] md:h-full md:min-h-[372px]">
                       <Image src={image} alt={title} fill sizes="(min-width: 768px) 36vw, 100vw" className="object-cover object-center" />

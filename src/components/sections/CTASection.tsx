@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
+import type { Dictionary } from "@/i18n/types";
 import { withBasePath } from "@/lib/base-path";
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
@@ -15,7 +16,11 @@ const smoothstep = (value: number) => {
 };
 const mapRange = (value: number, start: number, end: number) => clamp((value - start) / (end - start));
 
-export default function CTASection() {
+type CTASectionProps = {
+  content: Dictionary["cta"];
+};
+
+export default function CTASection({ content }: CTASectionProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const frameRef = useRef<number | null>(null);
   const [progress, setProgress] = useState(0);
@@ -126,14 +131,14 @@ export default function CTASection() {
               style={{ opacity: contentOpacity, transform: `translateY(${contentTranslateY}px)` }}
             >
               <Reveal as="h2" delay={0} className="font-serif text-5xl tracking-tight md:text-7xl">
-                Sẵn sàng với UniPay.
+                {content.title}
               </Reveal>
               <Reveal delay={100} className="mt-8 flex flex-wrap justify-center gap-4">
                 <Button variant="primary" className="px-8 py-3 text-lg">
-                  Bắt đầu với UniPay
+                  {content.primaryCta}
                 </Button>
                 <Button variant="secondary" className="px-8 py-3 text-lg">
-                  Liên hệ tư vấn
+                  {content.secondaryCta}
                 </Button>
               </Reveal>
             </div>

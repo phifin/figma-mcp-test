@@ -5,9 +5,16 @@ import Image from "next/image";
 
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { accordionItems, dataImage, sectionContainer, sectionSpacing } from "@/lib/landing-content";
+import type { Dictionary } from "@/i18n/types";
+import { dataImage, sectionContainer, sectionSpacing } from "@/lib/landing-content";
 
-export default function IntelligenceSection() {
+type IntelligenceSectionProps = {
+  content: Dictionary["intelligence"];
+};
+
+export default function IntelligenceSection({
+  content,
+}: IntelligenceSectionProps) {
   const [openAccordions, setOpenAccordions] = useState<number[]>([0]);
 
   const toggleAccordion = (index: number) => {
@@ -22,12 +29,12 @@ export default function IntelligenceSection() {
     <section className={`ui-section ui-divider ${sectionContainer} ${sectionSpacing} grid gap-14 md:grid-cols-[minmax(0,1fr)_minmax(0,620px)] md:gap-16`}>
       <div>
         <SectionHeading
-          eyebrow="UniPay Intelligence"
-          title="Kinh doanh dựa trên dữ liệu"
-          description="Từ dữ liệu bán hàng đến tồn kho, hóa đơn và vận hành đa điểm bán, AI tích hợp sâu giúp doanh nghiệp đưa ra quyết định chính xác hơn mỗi ngày."
+          eyebrow={content.eyebrow}
+          title={content.title}
+          description={content.description}
         />
         <div className="mt-10 divide-y divide-[var(--border-subtle)] rounded-[24px] border border-[var(--border-subtle)] bg-[var(--surface)] px-6 shadow-[var(--shadow-soft)]">
-          {accordionItems.map(([title, desc], idx) => {
+          {content.items.map(({ title, description }, idx) => {
             const open = openAccordions.includes(idx);
 
             return (
@@ -40,7 +47,7 @@ export default function IntelligenceSection() {
                   </span>
                 </button>
                 <div className={`grid transition-all duration-[260ms] ease-out ${open ? "mt-3 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
-                  <p className={`ui-body overflow-hidden text-base transition-all duration-[260ms] ease-out ${open ? "translate-y-0" : "-translate-y-1"}`}>{desc}</p>
+                  <p className={`ui-body overflow-hidden text-base transition-all duration-[260ms] ease-out ${open ? "translate-y-0" : "-translate-y-1"}`}>{description}</p>
                 </div>
               </div>
             );
@@ -48,7 +55,7 @@ export default function IntelligenceSection() {
         </div>
       </div>
       <Reveal delay={120} className="surface-card interactive-card relative flex items-center justify-center p-3">
-        <Image src={dataImage} alt="Dữ liệu kinh doanh" width={600} height={513} className="h-auto w-full rounded-[20px] object-cover" />
+        <Image src={dataImage} alt={content.imageAlt} width={600} height={513} className="h-auto w-full rounded-[20px] object-cover" />
       </Reveal>
     </section>
   );

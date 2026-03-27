@@ -2,16 +2,25 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
+import LocaleSwitcher from "@/components/locale/LocaleSwitcher";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
+import type { Locale } from "@/i18n/config";
+import type { Dictionary } from "@/i18n/types";
 import { withBasePath } from "@/lib/base-path";
 import { heroImage, sectionContainer } from "@/lib/landing-content";
 
-export default function HeroSection() {
+type HeroSectionProps = {
+  locale: Locale;
+  content: Dictionary["hero"];
+};
+
+export default function HeroSection({ locale, content }: HeroSectionProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [heroWordIndex, setHeroWordIndex] = useState(0);
-  const heroWords = ["Bán hàng", "Thanh toán"];
+  const heroWords = content.heroWords;
 
   useEffect(() => {
     const onScroll = () => {
@@ -39,24 +48,27 @@ export default function HeroSection() {
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-white/12" />
       <div className={`${sectionContainer} absolute inset-x-0 top-0 z-20 pt-5 md:pt-6`}>
         <div className="flex items-center justify-between gap-4 px-4 py-3 text-white md:px-6">
-          <button type="button" className="shrink-0 cursor-pointer">
+          <Link href={`/${locale}`} className="shrink-0 cursor-pointer">
             <Image src={withBasePath("/unipay-logo.svg")} alt="Unipay logo" width={108} height={40} className="h-8 w-auto md:h-9" />
-          </button>
+          </Link>
           <nav className="hidden items-center gap-7 text-sm font-medium text-white/84 lg:flex">
-            <button type="button" className="cursor-pointer transition-colors duration-[200ms] ease-out hover:text-white">Giải pháp Unipay</button>
-            <button type="button" className="cursor-pointer transition-colors duration-[200ms] ease-out hover:text-white">Giải pháp theo ngành</button>
-            <button type="button" className="cursor-pointer transition-colors duration-[200ms] ease-out hover:text-white">Thiết bị</button>
-            <button type="button" className="cursor-pointer transition-colors duration-[200ms] ease-out hover:text-white">Về chúng tôi</button>
+            {content.nav.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                className="cursor-pointer transition-colors duration-[200ms] ease-out hover:text-white"
+              >
+                {item.label}
+              </button>
+            ))}
           </nav>
           <div className="flex items-center gap-2 md:gap-3">
             <button type="button" className="hidden cursor-pointer text-sm font-medium text-white/82 transition-colors duration-[200ms] ease-out hover:text-white md:inline-flex">
-              Đăng nhập
+              {content.login}
             </button>
-            <span className="hidden rounded-full border border-white/14 bg-white/8 px-3 py-1 text-xs font-semibold text-white/86 md:inline-flex">
-              VI
-            </span>
+            <LocaleSwitcher locale={locale} label={content.switchLocaleLabel} />
             <Button variant="secondaryDark" className="px-5 py-2.5 text-sm">
-              Bắt đầu ngay
+              {content.startNow}
             </Button>
           </div>
         </div>
@@ -66,7 +78,7 @@ export default function HeroSection() {
         style={{ opacity: 1 - scrollProgress * 0.28, transform: `translateY(${scrollProgress * 12}px)` }}
       >
         <Reveal as="p" mode="hero" delay={40} className="font-mono text-sm uppercase tracking-[0.22em] text-white/82 md:text-base">
-          • Point of Sale & Operations •
+          {content.eyebrow}
         </Reveal>
         <Reveal as="h1" mode="hero" delay={120} className="mt-4 text-5xl leading-[0.94] tracking-tight md:text-8xl">
           <span className="font-serif italic">
@@ -89,17 +101,17 @@ export default function HeroSection() {
             </span>
           </span>
           <br />
-          <span>thông minh hơn với Unipay</span>
+          <span>{content.titleSuffix}</span>
         </Reveal>
         <Reveal mode="hero" delay={220} className="mx-auto mt-8 max-w-[680px] rounded-[20px] border border-white/12 bg-black/28 px-4 py-3 shadow-[0_18px_44px_rgba(0,0,0,0.18)] backdrop-blur-md md:px-6 md:py-4">
-          <p className="text-base text-white/88 md:text-lg">UniPay tích hợp AI trực tiếp vào bán hàng, thanh toán và vận hành - giúp doanh nghiệp Việt vận hành hiệu quả hơn mỗi ngày trên một nền tảng duy nhất.</p>
+          <p className="text-base text-white/88 md:text-lg">{content.description}</p>
         </Reveal>
         <Reveal mode="hero" delay={300} className="mt-10 flex flex-wrap items-center justify-center gap-4 md:gap-5">
           <Button variant="secondary" className="px-8 py-3 text-base text-[var(--brand-strong)]">
-            Bắt đầu với UniPay
+            {content.primaryCta}
           </Button>
           <Button variant="primary" className="px-8 py-3 text-base">
-            Liên hệ tư vấn
+            {content.secondaryCta}
           </Button>
         </Reveal>
       </div>

@@ -5,10 +5,15 @@ import Image from "next/image";
 
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
+import type { Dictionary } from "@/i18n/types";
 import { withBasePath } from "@/lib/base-path";
 import { sectionContainer, trustLogos } from "@/lib/landing-content";
 
-export default function SecuritySection() {
+type SecuritySectionProps = {
+  content: Dictionary["security"];
+};
+
+export default function SecuritySection({ content }: SecuritySectionProps) {
   const [expanded, setExpanded] = useState(false);
   const [animateSpread, setAnimateSpread] = useState(false);
 
@@ -34,8 +39,8 @@ export default function SecuritySection() {
         <SectionHeading
           centered
           dark
-          title="An toàn như ngân hàng"
-          description="Được chứng nhận PCI DSS và ISO, hạ tầng của UniPay đảm bảo dữ liệu và thanh toán luôn an toàn, minh bạch và sẵn sàng 24/7 trên nền tảng điện toán đám mây."
+          title={content.title}
+          description={content.description}
         />
         <Reveal delay={120} className="w-full">
           {expanded ? (

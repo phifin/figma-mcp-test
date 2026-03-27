@@ -5,16 +5,22 @@ import { useEffect, useRef, useState } from "react";
 
 import Reveal from "@/components/ui/Reveal";
 import SectionHeading from "@/components/ui/SectionHeading";
+import type { Dictionary } from "@/i18n/types";
 import { withBasePath } from "@/lib/base-path";
 import {
-  productSlides,
   sectionContainer,
   sectionSpacing,
 } from "@/lib/landing-content";
 
 const IMAGE_TRANSITION_MS = 2000;
 
-export default function ProductShowcaseSection() {
+type ProductShowcaseSectionProps = {
+  content: Dictionary["productShowcase"];
+};
+
+export default function ProductShowcaseSection({
+  content,
+}: ProductShowcaseSectionProps) {
   const [productIndex, setProductIndex] = useState(0);
   const [contentIndex, setContentIndex] = useState(0);
   const [previousImageIndex, setPreviousImageIndex] = useState<number | null>(
@@ -91,14 +97,14 @@ export default function ProductShowcaseSection() {
 
   const prevProduct = () =>
     goToProduct(
-      (productIndex - 1 + productSlides.length) % productSlides.length,
+      (productIndex - 1 + content.slides.length) % content.slides.length,
       -1,
     );
   const nextProduct = () =>
-    goToProduct((productIndex + 1) % productSlides.length, 1);
+    goToProduct((productIndex + 1) % content.slides.length, 1);
 
-  const [title, desc] = productSlides[contentIndex];
-  const progressWidth = `${((productIndex + 1) / productSlides.length) * 100}%`;
+  const { title, description } = content.slides[contentIndex];
+  const progressWidth = `${((productIndex + 1) / content.slides.length) * 100}%`;
   const currentImage = withBasePath(
     `/images/product-showcase/${productIndex + 1}.png`,
   );
@@ -113,8 +119,8 @@ export default function ProductShowcaseSection() {
     >
       <SectionHeading
         centered
-        title="Thiết kế bền bỉ - Chế tác tinh tế"
-        description="Phần cứng tối giản, vật liệu cao cấp được thiết kế cho sự chính xác trong mọi thao tác."
+        title={content.title}
+        description={content.description}
       />
       <Reveal className="relative rounded-[32px] border border-[rgba(15,23,42,0.08)] bg-[rgba(255,255,255,0.54)]">
         <div className="px-4 pb-4 pt-4 md:px-5 md:pb-5 md:pt-5">
@@ -134,10 +140,10 @@ export default function ProductShowcaseSection() {
                   <h3 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
                     {title}
                   </h3>
-                  <p className="ui-body mt-4">{desc}</p>
+                  <p className="ui-body mt-4">{description}</p>
                   <button className="group mt-6 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-[var(--text-primary)] transition-colors duration-[200ms] ease-out hover:text-[var(--brand-strong)]">
                     <span className="relative inline-block after:absolute after:-bottom-[0.15rem] after:left-0 after:h-[1.5px] after:w-full after:bg-current after:content-['']">
-                      Xem chi tiết
+                      {content.viewDetails}
                     </span>
                     <svg
                       width="14"
@@ -223,7 +229,7 @@ export default function ProductShowcaseSection() {
             <div className="relative flex items-center gap-1 rounded-full border border-[rgba(15,23,42,0.08)] bg-white p-1">
               <button
                 onClick={prevProduct}
-                aria-label="Sản phẩm trước"
+                aria-label={content.previousLabel}
                 className="grid h-10 w-10 cursor-pointer place-items-center rounded-full text-[var(--text-primary)] transition-all duration-[200ms] ease-out hover:bg-[var(--surface-subtle)] hover:text-[var(--brand)]"
               >
                 <svg
@@ -244,7 +250,7 @@ export default function ProductShowcaseSection() {
               </button>
               <button
                 onClick={nextProduct}
-                aria-label="Sản phẩm tiếp theo"
+                aria-label={content.nextLabel}
                 className="grid h-10 w-10 cursor-pointer place-items-center rounded-full text-[var(--text-primary)] transition-all duration-[200ms] ease-out hover:bg-[var(--surface-subtle)] hover:text-[var(--brand)]"
               >
                 <svg

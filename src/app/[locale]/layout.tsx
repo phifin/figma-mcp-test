@@ -1,6 +1,10 @@
-import type { Metadata } from "next";
+import type { ReactNode } from "react";
+
 import { IBM_Plex_Mono, Inter, Source_Serif_4 } from "next/font/google";
-import "./globals.css";
+
+import { locales } from "@/i18n/config";
+import { getLocaleFromParam } from "@/i18n/routing";
+import "../globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,22 +25,31 @@ const sourceSerif = Source_Serif_4({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Unipay",
-  description: "Giải pháp thanh toán và vận hành doanh nghiệp trên một nền tảng thống nhất.",
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+type LocaleLayoutProps = {
+  children: ReactNode;
+  params: Promise<{ locale: string }>;
 };
 
-export default function RootLayout({
+export default async function LocaleLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  params,
+}: LocaleLayoutProps) {
+  const { locale } = await params;
+  const currentLocale = getLocaleFromParam(locale);
+
   return (
     <html
-      lang="en"
+      lang={currentLocale}
       className={`${inter.variable} ${ibmPlexMono.variable} ${sourceSerif.variable} h-full antialiased`}
     >
       <body className="font-sans min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
+
