@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 import path from "node:path";
-const repo = "figma-mcp-test"; // đổi thành tên repo GitHub của bạn
-
-const isProd = process.env.NODE_ENV === "production";
+const configuredBasePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? "").replace(
+  /\/$/,
+  ""
+);
 
 const nextConfig: NextConfig = {
   output: "export",
@@ -11,10 +12,10 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   env: {
-    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : "",
+    NEXT_PUBLIC_BASE_PATH: configuredBasePath,
   },
-  basePath: isProd ? `/${repo}` : "",
-  assetPrefix: isProd ? `/${repo}/` : "",
+  basePath: configuredBasePath || undefined,
+  assetPrefix: configuredBasePath ? `${configuredBasePath}/` : undefined,
   turbopack: {
     root: path.join(__dirname),
   },

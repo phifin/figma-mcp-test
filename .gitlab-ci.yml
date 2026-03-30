@@ -1,0 +1,4 @@
+include:
+  - project: "sre/ci-templates"
+    ref: main
+    file: "main.yml"
