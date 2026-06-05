@@ -1,57 +1,87 @@
+"use client";
+
+import type { CSSProperties } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 import Reveal from "@/components/ui/Reveal";
-import SectionHeading from "@/components/ui/SectionHeading";
 import type { Dictionary } from "@/i18n/types";
-import { featureImages, sectionContainer, sectionSpacing } from "@/lib/landing-content";
+import { withBasePath } from "@/lib/base-path";
+import { solutionItems, solutionVisuals } from "@/lib/figma-assets";
 
 type FeatureSectionProps = {
   content: Dictionary["feature"];
 };
 
-export default function FeatureSection({ content }: FeatureSectionProps) {
+export default function FeatureSection({}: FeatureSectionProps) {
+  const [openIndex, setOpenIndex] = useState(0);
+
   return (
-    <section className={`ui-section ui-divider ${sectionContainer} ${sectionSpacing} flex flex-col gap-10`}>
-      <SectionHeading
-        eyebrow={content.eyebrow}
-        title={content.title}
-        description={content.description}
-        widthClass="max-w-[1240px]"
-      />
-      <div className="space-y-14 md:space-y-16">
-        {content.items.map(({ title, description }, idx) => (
-          <div key={title} className="group">
-            <div className="grid gap-8 border-t border-[var(--border-subtle)] pt-10 md:grid-cols-[minmax(0,480px)_minmax(0,1fr)] md:items-stretch md:gap-16">
-              <Reveal delay={idx * 60 + 80} className="relative h-72 w-full overflow-hidden rounded-[24px] shadow-[var(--shadow-soft)] md:h-full md:min-h-[320px]">
-                <Image src={featureImages[idx]} alt={title} fill sizes="(min-width: 768px) 480px, 100vw" className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.02]" />
-              </Reveal>
-              <Reveal delay={idx * 60 + 180} className="surface-card interactive-card flex h-full w-full flex-col justify-center p-7 md:p-8">
-                <div className="flex items-start justify-between gap-4">
-                  <span className="text-3xl font-semibold tracking-tight">{title}</span>
-                  <span className="ui-eyebrow text-xs tracking-[0.2em] opacity-70 transition-opacity duration-[560ms] ease-out [transition-delay:120ms] group-hover:opacity-100">{String(idx + 1).padStart(2, "0")}</span>
-                </div>
-                <p className="ui-body mt-4 text-lg">{description}</p>
-                <button className="group mt-5 inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-[var(--text-primary)] transition-colors duration-[200ms] ease-out hover:text-[var(--brand-strong)]">
-                  <span className="relative inline-block after:absolute after:-bottom-[0.15rem] after:left-0 after:h-[1.5px] after:w-full after:bg-current after:content-['']">
-                    {content.learnMore}
+    <section className="grid bg-white lg:grid-cols-[minmax(0,1fr)_minmax(420px,700px)]">
+      <div className="flex flex-col justify-center gap-16 px-6 py-16 md:px-10 lg:min-h-[706px] lg:px-[60px] lg:py-10">
+        <Reveal
+          as="h2"
+          className="max-w-[640px] font-serif text-[36px] font-normal leading-[1.16] tracking-[-1.4px] text-[var(--text-primary)] md:text-5xl md:leading-[1.2] md:tracking-[-1.8px]"
+        >
+          Một hệ sinh thái trọn bộ giải pháp. Bao quát mọi nhu cầu kinh doanh.
+        </Reveal>
+        <Reveal
+          mode="stagger"
+          delay={100}
+          className="max-w-[640px] divide-y divide-[rgba(6,6,6,0.14)]"
+        >
+          {solutionItems.map((item, index) => {
+            const open = openIndex === index;
+
+            return (
+              <div
+                key={item.title}
+                style={{ "--stagger-index": index } as CSSProperties}
+                className="motion-stagger-item py-5"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenIndex(index)}
+                  className="group flex w-full items-center justify-between gap-6 text-left"
+                >
+                  <span className="text-xl font-semibold leading-8 tracking-[-0.1px] text-[var(--text-primary)] transition-colors group-hover:text-[var(--brand)] md:text-2xl">
+                    {index + 1}. {item.title}
                   </span>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    aria-hidden="true"
-                    className="transition-transform duration-[200ms] ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  >
-                    <path d="M4 10L10 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-                    <path d="M5.25 4H10V8.75" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <span className={`grid size-9 shrink-0 place-items-center text-3xl leading-none text-[var(--text-primary)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "rotate-180" : "rotate-0"}`}>
+                    {open ? "-" : "+"}
+                  </span>
                 </button>
-              </Reveal>
-            </div>
-          </div>
-        ))}
+                <div className={`grid transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${open ? "mt-4 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                  <p className="overflow-hidden text-base leading-6 tracking-[-0.24px] text-[var(--text-secondary)]">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </Reveal>
       </div>
+      <Reveal
+        mode="right"
+        delay={160}
+        className="group relative min-h-[460px] overflow-hidden lg:min-h-[706px]"
+      >
+        {solutionVisuals.map((visual, index) => (
+          <Image
+            key={visual.title}
+            src={withBasePath(visual.image)}
+            alt=""
+            fill
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            className={`object-cover transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              index === openIndex
+                ? "scale-100 opacity-100"
+                : "scale-[1.025] opacity-0"
+            }`}
+            priority={index === 0}
+          />
+        ))}
+      </Reveal>
     </section>
   );
 }

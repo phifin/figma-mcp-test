@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,193 +10,310 @@ import Reveal from "@/components/ui/Reveal";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { withBasePath } from "@/lib/base-path";
-import { heroImage, sectionContainer } from "@/lib/landing-content";
+import { figmaImage, publicImage } from "@/lib/figma-assets";
 
 type HeroSectionProps = {
   locale: Locale;
   content: Dictionary["hero"];
 };
 
+const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+const lerp = (start: number, end: number, progress: number) => start + (end - start) * progress;
+const smoothstep = (value: number) => {
+  const next = clamp(value);
+  return next * next * (3 - 2 * next);
+};
+const mapRange = (value: number, start: number, end: number) =>
+  clamp((value - start) / (end - start));
+
+const collageImages = [
+  { src: publicImage("/images/product-showcase/1.png"), x: 3, y: 28, w: 10, h: 20, rotate: -2, delay: 0.18 },
+  { src: figmaImage("industry-hotel.png"), x: 14, y: 3, w: 11, h: 20, rotate: -4, delay: 0.24 },
+  { src: publicImage("/images/product-showcase/2.png"), x: 31, y: 6, w: 10, h: 19, rotate: 2, delay: 0.28 },
+  { src: figmaImage("industry-fnb.png"), x: 58, y: 7, w: 10, h: 19, rotate: -2, delay: 0.32 },
+  { src: figmaImage("device-hover-a90.png"), x: 80, y: 4, w: 11, h: 20, rotate: 4, delay: 0.36 },
+  { src: figmaImage("industry-retail.png"), x: 17, y: 42, w: 10, h: 20, rotate: -1, delay: 0.34 },
+  { src: figmaImage("industry-spa.png"), x: 72, y: 42, w: 10, h: 20, rotate: 2, delay: 0.4 },
+  { src: figmaImage("payment-card-correct.jpg"), x: 89, y: 34, w: 9, h: 18, rotate: -3, delay: 0.46 },
+  { src: figmaImage("payment-bank-correct.jpg"), x: 2, y: 72, w: 10, h: 19, rotate: 3, delay: 0.48 },
+  { src: figmaImage("industry-health.png"), x: 24, y: 70, w: 10, h: 19, rotate: -2, delay: 0.52 },
+  { src: figmaImage("trust-cloud.png"), x: 46, y: 72, w: 10, h: 19, rotate: 1, delay: 0.56 },
+  { src: figmaImage("payment-wallet-correct.jpg"), x: 67, y: 70, w: 10, h: 19, rotate: -3, delay: 0.6 },
+  { src: figmaImage("ai-assistant.png"), x: 88, y: 72, w: 10, h: 19, rotate: 2, delay: 0.64 },
+] as const;
+
 export default function HeroSection({ locale, content }: HeroSectionProps) {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [heroWordIndex, setHeroWordIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const heroWords = content.heroWords;
-
-  useEffect(() => {
-    const onScroll = () => {
-      setScrollProgress(Math.min(window.scrollY / 320, 1));
-    };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setHeroWordIndex((current) => (current + 1) % heroWords.length);
-    }, 2500);
-
-    return () => window.clearInterval(interval);
-  }, [heroWords.length]);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const frameRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
 
     const closeMenu = () => setMobileMenuOpen(false);
-
     window.addEventListener("resize", closeMenu);
 
     return () => window.removeEventListener("resize", closeMenu);
   }, [mobileMenuOpen]);
 
+  useEffect(() => {
+    const updateProgress = () => {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const scrollRange = Math.max(section.offsetHeight - window.innerHeight, 1);
+      setScrollProgress(clamp(-rect.top / scrollRange));
+    };
+
+    const scheduleUpdate = () => {
+      if (frameRef.current !== null) return;
+
+      frameRef.current = window.requestAnimationFrame(() => {
+        frameRef.current = null;
+        updateProgress();
+      });
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, []);
+
+  const sceneProgress = smoothstep(scrollProgress);
+  const settleProgress = smoothstep(mapRange(scrollProgress, 0, 0.16));
+  const collageProgress = smoothstep(mapRange(scrollProgress, 0.1, 0.72));
+  const heroContentOpacity = 1 - smoothstep(mapRange(scrollProgress, 0.04, 0.28));
+  const collageTextOpacity = smoothstep(mapRange(scrollProgress, 0.52, 0.76));
+  const whiteSceneOpacity = smoothstep(mapRange(scrollProgress, 0.14, 0.5));
+  const headerOnLight = scrollProgress > 0.42;
+  const headerOpacity = 1 - smoothstep(mapRange(scrollProgress, 0.16, 0.36));
+  const mainCardStyle = {
+    left: `${lerp(0, 44.5, collageProgress)}%`,
+    top: `${lerp(0, 28, collageProgress) + lerp(0, 3, settleProgress)}vh`,
+    width: `${lerp(100, 11, collageProgress)}%`,
+    height: `${lerp(100, 21, collageProgress)}vh`,
+    borderRadius: `${lerp(0, 24, collageProgress)}px`,
+    boxShadow: `0 ${lerp(0, 22, collageProgress)}px ${lerp(0, 60, collageProgress)}px rgba(0,0,0,${lerp(0, 0.18, collageProgress)})`,
+  } as CSSProperties;
+
   return (
-    <section className="ui-section relative min-h-[92vh] overflow-hidden">
-      <Image src={withBasePath(heroImage)} alt="" fill sizes="100vw" className="object-cover" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,10,24,0.46)_0%,rgba(4,10,24,0.68)_58%,rgba(4,10,24,0.8)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-white/12" />
-      <div className={`${sectionContainer} absolute inset-x-0 top-0 z-20 pt-5 md:pt-6`}>
-        <div className="flex items-center justify-between gap-6 px-4 py-3 text-white md:px-6">
-          <div className="flex items-center gap-18 xl:gap-40">
-            <Link href={`/${locale}`} className="shrink-0 cursor-pointer">
-              <Image src={withBasePath("/unipay-logo.svg")} alt="Unipay logo" width={108} height={40} className="h-8 w-auto md:h-9" />
-            </Link>
-            <nav className="hidden items-center gap-8 text-base font-medium text-white/84 lg:flex xl:gap-9">
-              {content.nav.map((item) => (
-                <button
-                  key={item.label}
-                  type="button"
-                  className="cursor-pointer transition-colors duration-[200ms] ease-out hover:text-white"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-          <div className="flex items-center gap-2 md:gap-3">
+    <section ref={sectionRef} className="relative min-h-[230vh] bg-white">
+      <div className="sticky top-0 h-screen overflow-hidden bg-black">
+        <div
+          className="absolute inset-0 bg-white transition-colors duration-300"
+          style={{ opacity: whiteSceneOpacity }}
+        />
+        {collageImages.map((image, index) => {
+          const itemProgress = smoothstep(mapRange(scrollProgress, image.delay, 0.72));
+
+          return (
+            <div
+              key={`${image.src}-${index}`}
+              className="absolute overflow-hidden rounded-[22px] bg-[#f4f4f4] shadow-[0_18px_50px_rgba(0,0,0,0.14)] will-change-[opacity,transform]"
+              style={
+                {
+                  left: `${image.x}vw`,
+                  top: `${image.y}vh`,
+                  width: `clamp(112px, ${image.w}vw, 210px)`,
+                  height: `clamp(120px, ${image.h}vh, 220px)`,
+                  opacity: itemProgress,
+                  transform: `translate3d(0, ${lerp(42, 0, itemProgress)}px, 0) scale(${lerp(0.78, 1, itemProgress)}) rotate(${lerp(image.rotate * 2, image.rotate, itemProgress)}deg)`,
+                } as CSSProperties
+              }
+            >
+              <Image
+                src={withBasePath(image.src)}
+                alt=""
+                fill
+                sizes="220px"
+                className="object-cover"
+              />
+            </div>
+          );
+        })}
+        <div
+          className="absolute overflow-hidden bg-black will-change-[left,top,width,height,border-radius]"
+          style={mainCardStyle}
+        >
+          <Image
+            src={withBasePath(publicImage("/images/get-started.png"))}
+            alt=""
+            fill
+            priority
+            sizes={collageProgress > 0.5 ? "24vw" : "100vw"}
+            className="object-cover object-center"
+            style={{
+              transform: `scale(${lerp(1.04, 1, sceneProgress)})`,
+              transition: "transform 120ms linear",
+            }}
+          />
+          <div
+            className="absolute inset-0 bg-black"
+            style={{ opacity: lerp(0.34, 0.08, collageProgress) }}
+          />
+        </div>
+        <div
+          className="absolute inset-x-0 bottom-0 h-[123px] backdrop-blur-[16px]"
+          style={{ opacity: 1 - whiteSceneOpacity }}
+        >
+          <Image
+            src={withBasePath(figmaImage("hero-blur.png"))}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover opacity-80"
+          />
+        </div>
+
+      <header
+        className="absolute inset-x-0 top-0 z-30 transition-opacity duration-200"
+        style={{
+          opacity: headerOpacity,
+          pointerEvents: headerOpacity > 0.08 ? "auto" : "none",
+        }}
+      >
+        <div className="flex h-[60px] items-center gap-10 px-6 md:px-10 lg:px-20">
+          <Link href={`/${locale}`} className="relative h-10 w-[102px] shrink-0">
+            <Image
+              src={withBasePath("/unipay-logo.svg")}
+              alt="Unipay logo"
+              fill
+              sizes="102px"
+              className={`object-contain transition duration-300 ${headerOnLight ? "" : "brightness-0 invert"}`}
+              style={{ width: "100%", height: "100%" }}
+            />
+          </Link>
+          <nav className="hidden min-w-0 flex-1 items-center overflow-hidden lg:flex">
+            {content.nav.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                className={`rounded-full px-3 py-2 text-base leading-5 tracking-[-0.4px] transition ${
+                  headerOnLight ? "text-[#060606] hover:bg-black/5" : "text-white hover:bg-white/10"
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+          <div className="ml-auto hidden items-center gap-5 md:flex">
             <button
               type="button"
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={mobileMenuOpen}
-              onClick={() => setMobileMenuOpen((current) => !current)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/14 bg-white/8 text-white transition-colors duration-[200ms] ease-out hover:bg-white/14 lg:hidden"
+              className={`py-2 text-base font-medium leading-5 tracking-[-0.4px] transition ${
+                headerOnLight ? "text-[#060606]" : "text-white"
+              }`}
             >
-              <span className="sr-only">{mobileMenuOpen ? "Close menu" : "Open menu"}</span>
-              <span className="relative block h-4 w-4">
-                <span
-                  className={`absolute left-0 top-1/2 h-[1.5px] w-4 rounded-full bg-current transition-all duration-[220ms] ease-out ${
-                    mobileMenuOpen ? "translate-y-0 rotate-45" : "-translate-y-[5px]"
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 top-1/2 h-[1.5px] w-4 -translate-y-1/2 rounded-full bg-current transition-opacity duration-[180ms] ease-out ${
-                    mobileMenuOpen ? "opacity-0" : "opacity-100"
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 top-1/2 h-[1.5px] w-4 rounded-full bg-current transition-all duration-[220ms] ease-out ${
-                    mobileMenuOpen ? "translate-y-0 rotate-[-45deg]" : "translate-y-[5px]"
-                  }`}
-                />
-              </span>
-            </button>
-            <button type="button" className="hidden cursor-pointer text-base font-medium text-white/82 transition-colors duration-[200ms] ease-out hover:text-white md:inline-flex">
               {content.login}
             </button>
             <button
               type="button"
-              className="hidden cursor-pointer px-5 py-2.5 text-base font-semibold text-white/86 transition-colors duration-[200ms] ease-out hover:text-white md:inline-flex"
+              className={`py-2 text-base font-medium leading-5 tracking-[-0.4px] transition ${
+                headerOnLight ? "text-[#060606]" : "text-white"
+              }`}
             >
               {content.startNow}
             </button>
-            <LocaleSwitcher locale={locale} label={content.switchLocaleLabel} />
+            <LocaleSwitcher locale={locale} label={content.switchLocaleLabel} className="inline-flex" />
           </div>
+          <button
+            type="button"
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen((current) => !current)}
+            className={`ml-auto grid size-10 place-items-center rounded-full transition md:hidden ${
+              headerOnLight ? "bg-black/5 text-[#060606]" : "bg-white/10 text-white"
+            }`}
+          >
+            <span className="relative block h-4 w-5">
+              <span className={`absolute left-0 top-1/2 h-px w-5 bg-current transition ${mobileMenuOpen ? "rotate-45" : "-translate-y-1.5"}`} />
+              <span className={`absolute left-0 top-1/2 h-px w-5 bg-current transition ${mobileMenuOpen ? "opacity-0" : "opacity-100"}`} />
+              <span className={`absolute left-0 top-1/2 h-px w-5 bg-current transition ${mobileMenuOpen ? "-rotate-45" : "translate-y-1.5"}`} />
+            </span>
+          </button>
         </div>
-        <div
-          className={`overflow-hidden transition-[max-height,opacity,transform] duration-[260ms] ease-out lg:hidden ${
-            mobileMenuOpen ? "max-h-[420px] translate-y-0 opacity-100" : "max-h-0 -translate-y-2 opacity-0"
-          }`}
-        >
-          <div className="mx-4 mt-3 rounded-[24px] border border-white/12 bg-black/28 p-4 shadow-[0_18px_44px_rgba(0,0,0,0.18)] backdrop-blur-md md:mx-6">
-            <nav className="flex flex-col gap-1">
-              {content.nav.map((item) => (
-                <button
-                  key={item.label}
-                  type="button"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex cursor-pointer items-center justify-start rounded-[16px] px-3 py-3 text-left text-base font-medium text-white/88 transition-colors duration-[200ms] ease-out hover:bg-white/8 hover:text-white"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-            <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
-              <div className="flex items-center gap-4">
-                <button
-                  type="button"
-                  className="inline-flex cursor-pointer text-base font-medium text-white/82 transition-colors duration-[200ms] ease-out hover:text-white"
-                >
-                  {content.login}
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex cursor-pointer text-base font-semibold text-white/86 transition-colors duration-[200ms] ease-out hover:text-white"
-                >
-                  {content.startNow}
-                </button>
-              </div>
-              <LocaleSwitcher
-                locale={locale}
-                label={content.switchLocaleLabel}
-                className="inline-flex"
-              />
+        <div className={`px-6 transition md:hidden ${mobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 overflow-hidden opacity-0"}`}>
+          <div className="rounded-2xl border border-white/12 bg-black/40 p-4 backdrop-blur-md">
+            {content.nav.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block w-full rounded-xl px-3 py-3 text-left text-base text-white/90 hover:bg-white/10"
+              >
+                {item.label}
+              </button>
+            ))}
+            <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
+              <span className="text-sm text-white/80">{content.login}</span>
+              <LocaleSwitcher locale={locale} label={content.switchLocaleLabel} className="inline-flex" />
             </div>
           </div>
         </div>
-      </div>
-      <div
-        className={`${sectionContainer} relative flex min-h-[92vh] flex-col justify-center py-24 pt-36 text-center text-white transition-[opacity,transform] duration-[260ms] ease-out md:pt-40`}
-        style={{ opacity: 1 - scrollProgress * 0.28, transform: `translateY(${scrollProgress * 12}px)` }}
-      >
-        <Reveal as="p" mode="hero" delay={40} className="font-mono text-sm uppercase tracking-[0.22em] text-white/82 md:text-base">
-          {content.eyebrow}
-        </Reveal>
-        <Reveal as="h1" mode="hero" delay={120} className="mt-4 text-5xl leading-[0.94] tracking-tight md:text-8xl">
-          <span className="font-serif italic">
-            <span className="relative inline-grid min-w-[9ch] md:min-w-[11ch]">
-              {heroWords.map((word, index) => {
-                const isActive = index === heroWordIndex;
+      </header>
 
-                return (
-                  <span
-                    key={word}
-                    aria-hidden={!isActive}
-                    className={`col-start-1 row-start-1 transition-[opacity,transform] duration-[780ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                      isActive ? "translate-y-0 opacity-100" : "translate-y-[14px] opacity-0"
-                    }`}
-                  >
-                    {word}
-                  </span>
-                );
-              })}
-            </span>
-          </span>
-          <br />
-          <span>{content.titleSuffix}</span>
-        </Reveal>
-        <Reveal mode="hero" delay={220} className="mx-auto mt-8 max-w-[680px] rounded-[20px] border border-white/12 bg-black/28 px-4 py-3 shadow-[0_18px_44px_rgba(0,0,0,0.18)] backdrop-blur-md md:px-6 md:py-4">
-          <p className="text-base text-white/88 md:text-lg">{content.description}</p>
-        </Reveal>
-        <Reveal mode="hero" delay={300} className="mt-10 flex flex-wrap items-center justify-center gap-4 md:gap-5">
-          <button className="btn-pill cursor-pointer btn-secondary px-8 py-3 text-base text-[var(--brand-strong)]">
-            {content.primaryCta}
-          </button>
-          <button className="btn-pill cursor-pointer btn-primary px-8 py-3 text-base">
-            {content.secondaryCta}
-          </button>
-        </Reveal>
+        <div
+          className="relative z-20 flex h-screen flex-col items-center justify-center px-6 pb-20 pt-28 text-center"
+          style={{
+            opacity: heroContentOpacity,
+            transform: `translateY(${lerp(0, -28, smoothstep(mapRange(scrollProgress, 0, 0.4)))}px)`,
+            pointerEvents: heroContentOpacity > 0.2 ? "auto" : "none",
+          }}
+        >
+          <Reveal
+            as="p"
+            mode="hero"
+            delay={240}
+            className="font-mono text-xs font-medium uppercase leading-[22px] tracking-[1px] text-white md:text-base"
+          >
+            {content.eyebrow}
+          </Reveal>
+          <Reveal
+            as="h1"
+            mode="hero"
+            delay={320}
+            className="mt-2 max-w-[1112px] font-serif text-[44px] font-medium leading-[1.08] tracking-[-1.2px] text-white md:text-[82px] md:leading-[1.04] md:tracking-[-2.8px]"
+          >
+            Nền tảng thanh toán và quản lý
+            <br />
+            toàn diện cho mọi doanh nghiệp.
+          </Reveal>
+          <Reveal
+            mode="hero"
+            delay={460}
+            className="mt-8 flex flex-wrap items-center justify-center gap-3"
+          >
+            <button className="motion-button h-14 rounded-full bg-white px-8 text-lg font-medium leading-[26px] text-[var(--brand)] shadow-[0_2px_4px_rgba(27,28,29,0.04)]">
+              Đăng ký ngay
+            </button>
+            <button className="motion-button h-14 rounded-full bg-[var(--brand)] px-8 text-lg font-medium leading-[26px] text-white shadow-[0_2px_4px_rgba(27,28,29,0.04)]">
+              {content.secondaryCta}
+            </button>
+          </Reveal>
+        </div>
+        <div
+          className="pointer-events-none absolute inset-x-0 top-[51%] z-25 flex justify-center px-6 md:top-[52%] md:px-10"
+          style={{
+            opacity: collageTextOpacity,
+            transform: `translateY(${lerp(42, 0, collageTextOpacity)}px)`,
+          }}
+        >
+          <p className="max-w-[min(52rem,46vw)] text-center font-serif text-[34px] font-normal leading-[1.12] tracking-[-1px] text-[#060606] md:text-[54px] md:leading-[1.08] md:tracking-[-1.8px]">
+            Nền tảng thanh toán và quản lý
+            <br />
+            toàn diện cho mọi doanh nghiệp.
+          </p>
+        </div>
       </div>
     </section>
   );

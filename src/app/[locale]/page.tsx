@@ -44,14 +44,14 @@ export default async function Home({ params }: LocalePageProps) {
   return (
     <main className="bg-white text-[var(--text-primary)]">
       <HeroSection locale={currentLocale} content={dictionary.hero} />
-      <FeatureSection content={dictionary.feature} />
-      <IntelligenceSection content={dictionary.intelligence} />
       <ProductShowcaseSection content={dictionary.productShowcase} />
-      <VideoSection />
+      <FeatureSection content={dictionary.feature} />
       <IndustrySection content={dictionary.industries} />
-      <StepSliderSection content={dictionary.steps} />
-      <PricingSection content={dictionary.pricing} />
+      <IntelligenceSection content={dictionary.intelligence} />
       <SecuritySection content={dictionary.security} />
+      <StepSliderSection content={dictionary.steps} />
+      <VideoSection />
+      <PricingSection content={dictionary.pricing} />
       <CTASection content={dictionary.cta} />
       <Footer content={dictionary.footer} />
     </main>

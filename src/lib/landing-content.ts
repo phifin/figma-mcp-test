@@ -1,7 +1,9 @@
+import { publicImage } from "@/lib/figma-assets";
+
 export const sectionContainer = "mx-auto w-full px-7 md:px-10 lg:px-14";
 export const sectionSpacing = "py-24 md:py-30";
 
-export const heroImage = "/images/get-started.png";
+export const heroImage = publicImage("/images/get-started.png");
 export const featureImages = [
   "https://www.figma.com/api/mcp/asset/11ef468d-629a-4da1-bb55-b9dd9aac3402",
   "https://www.figma.com/api/mcp/asset/dba53f22-7ab3-4e18-8688-581abd42c698",
@@ -26,8 +28,8 @@ export const stepImages = [
 export const bottomCtaImage = "https://www.figma.com/api/mcp/asset/e0545c49-7cfb-4c41-87e8-73410a99a164";
 
 export const trustLogos = [
-  { name: "PCI DSS", src: "certs/pci-dss.png" },
-  { name: "ISO 27001", src: "certs/iso27001.png" },
-  { name: "ISO 22301", src: "certs/iso22301.png" },
-  { name: "ISO 20000", src: "certs/iso20000.png" },
+  { name: "PCI DSS", src: publicImage("/certs/pci-dss.png") },
+  { name: "ISO 27001", src: publicImage("/certs/iso27001.png") },
+  { name: "ISO 22301", src: publicImage("/certs/iso22301.png") },
+  { name: "ISO 20000", src: publicImage("/certs/iso20000.png") },
 ];

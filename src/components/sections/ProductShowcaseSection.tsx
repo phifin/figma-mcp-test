@@ -1,20 +1,13 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 import Reveal from "@/components/ui/Reveal";
-import SectionHeading from "@/components/ui/SectionHeading";
 import type { Dictionary } from "@/i18n/types";
 import { withBasePath } from "@/lib/base-path";
-import { sectionContainer, sectionSpacing } from "@/lib/landing-content";
-
-const IMAGE_TRANSITION_MS = 1000000;
-const TEXT_TRANSITION_MS = Math.max(
-  340,
-  Math.min(IMAGE_TRANSITION_MS * 0.48, 1400),
-);
+import { deviceCards } from "@/lib/figma-assets";
 
 type ProductShowcaseSectionProps = {
   content: Dictionary["productShowcase"];
@@ -23,266 +16,184 @@ type ProductShowcaseSectionProps = {
 export default function ProductShowcaseSection({
   content,
 }: ProductShowcaseSectionProps) {
-  const [productIndex, setProductIndex] = useState(0);
-  const [contentIndex, setContentIndex] = useState(0);
-  const [previousImageIndex, setPreviousImageIndex] = useState<number | null>(
-    null,
-  );
-  const [imageTransitionActive, setImageTransitionActive] = useState(false);
-  const [textVisible, setTextVisible] = useState(true);
-  const [textEntering, setTextEntering] = useState(true);
-  const [incomingImageReady, setIncomingImageReady] = useState(true);
-  const imageTimeoutRef = useRef<number | null>(null);
-  const contentTimeoutRef = useRef<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const cardRefs = useRef<Array<HTMLElement | null>>([]);
 
-  useEffect(() => {
-    return () => {
-      if (imageTimeoutRef.current !== null) {
-        window.clearTimeout(imageTimeoutRef.current);
-      }
-      if (contentTimeoutRef.current !== null) {
-        window.clearTimeout(contentTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!imageTransitionActive || previousImageIndex === null) return;
-
-    imageTimeoutRef.current = window.setTimeout(() => {
-      setPreviousImageIndex(null);
-      setImageTransitionActive(false);
-      imageTimeoutRef.current = null;
-    }, IMAGE_TRANSITION_MS);
-
-    return () => {
-      if (imageTimeoutRef.current !== null) {
-        window.clearTimeout(imageTimeoutRef.current);
-        imageTimeoutRef.current = null;
-      }
-    };
-  }, [imageTransitionActive, previousImageIndex]);
-
-  const goToProduct = (nextIndex: number, nextDirection: 1 | -1) => {
-    if (nextIndex === productIndex) return;
-
-    if (imageTimeoutRef.current !== null) {
-      window.clearTimeout(imageTimeoutRef.current);
-      imageTimeoutRef.current = null;
-    }
-    if (contentTimeoutRef.current !== null) {
-      window.clearTimeout(contentTimeoutRef.current);
-      contentTimeoutRef.current = null;
-    }
-
-    setPreviousImageIndex(productIndex);
-    setProductIndex(nextIndex);
-    setImageTransitionActive(false);
-    setIncomingImageReady(false);
-    setTextVisible(false);
-    setTextEntering(true);
-
-    contentTimeoutRef.current = window.setTimeout(() => {
-      setContentIndex(nextIndex);
-      setTextVisible(true);
-      setTextEntering(false);
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setTextEntering(true);
-        });
-      });
-      contentTimeoutRef.current = null;
-    }, 120);
-  };
-
-  const prevProduct = () =>
-    goToProduct(
-      (productIndex - 1 + content.slides.length) % content.slides.length,
-      -1,
-    );
+  const currentIndex = activeIndex ?? 0;
+  const canGoPrevious = activeIndex !== null && currentIndex > 0;
+  const canGoNext =
+    activeIndex === null || currentIndex < deviceCards.length - 1;
+  const previousProduct = () =>
+    setActiveIndex((current) => Math.max((current ?? 1) - 1, 0));
   const nextProduct = () =>
-    goToProduct((productIndex + 1) % content.slides.length, 1);
+    setActiveIndex((current) =>
+      current === null ? 0 : Math.min(current + 1, deviceCards.length - 1),
+    );
+  const activateProduct = (index: number) => {
+    setActiveIndex((current) => (current === index ? current : index));
+  };
 
-  const { title, description } = content.slides[contentIndex];
-  const progressWidth = `${((productIndex + 1) / content.slides.length) * 100}%`;
-  const currentImage = withBasePath(
-    `/images/product-showcase/${productIndex + 1}.png`,
-  );
-  const previousImage =
-    previousImageIndex !== null
-      ? withBasePath(`/images/product-showcase/${previousImageIndex + 1}.png`)
-      : null;
-  const imageTransitionStyle: CSSProperties = {
-    transitionDuration: `${IMAGE_TRANSITION_MS}ms`,
-  };
-  const textTransitionStyle: CSSProperties = {
-    transitionDuration: `${TEXT_TRANSITION_MS}ms`,
-  };
+  useEffect(() => {
+    if (activeIndex === null) return;
+
+    const alignActiveCard = () => {
+      const viewport = viewportRef.current;
+      const card = cardRefs.current[activeIndex];
+      if (!viewport || !card) return;
+
+      const viewportRect = viewport.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const inset = 48;
+      const overflowLeft = cardRect.left - (viewportRect.left + inset);
+      const overflowRight = cardRect.right - (viewportRect.right - inset);
+
+      if (overflowLeft < 0) {
+        viewport.scrollBy({ left: overflowLeft, behavior: "smooth" });
+      } else if (overflowRight > 0) {
+        viewport.scrollBy({ left: overflowRight, behavior: "smooth" });
+      }
+    };
+
+    alignActiveCard();
+    const settleTimers = [
+      window.setTimeout(alignActiveCard, 320),
+      window.setTimeout(alignActiveCard, 820),
+    ];
+
+    return () => {
+      settleTimers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, [activeIndex]);
 
   return (
-    <section
-      className={`ui-section ui-divider ${sectionContainer} ${sectionSpacing} flex flex-col gap-8`}
-    >
-      <SectionHeading
-        centered
-        title={content.title}
-        description={content.description}
-      />
-      <Reveal className="relative rounded-[32px] border border-[rgba(15,23,42,0.08)] bg-[rgba(255,255,255,0.54)]">
-        <div className="px-4 pb-4 pt-4 md:px-5 md:pb-5 md:pt-5">
-          <div className="grid gap-8 rounded-[26px] pb-12 md:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] md:gap-12 md:pb-14">
-            <div className="surface-card flex min-h-[390px] flex-col rounded-[24px] p-6">
-              <div className="relative min-h-[220px]">
-                <div
-                  key={contentIndex}
-                  style={textTransitionStyle}
-                  className={`absolute inset-0 transition-[opacity,transform] duration-[340ms] ease-out ${
-                    textVisible
-                      ? textEntering
-                        ? "translate-y-0 opacity-100"
-                        : "translate-y-[10px] opacity-0"
-                      : "translate-y-0 opacity-0"
-                  }`}
-                >
-                  <h3 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)]">
-                    {title}
-                  </h3>
-                  <div className="mt-5 h-px w-full bg-[rgba(15,23,42,0.18)]" />
-                  <p className="ui-body mt-5">{description}</p>
-                  <button className="group mt-6 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-[var(--text-primary)] transition-colors duration-[200ms] ease-out hover:text-[var(--brand-strong)]">
-                    <span className="relative inline-block after:absolute after:-bottom-[0.15rem] after:left-0 after:h-[1.5px] after:w-full after:bg-current after:content-['']">
-                      {content.viewDetails}
-                    </span>
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      aria-hidden="true"
-                      className="transition-transform duration-[200ms] ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                    >
-                      <path
-                        d="M4 10L10 4"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                        strokeLinecap="round"
-                      />
-                      <path
-                        d="M5.25 4H10V8.75"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+    <section className="bg-white py-20">
+      <div className="flex items-end justify-between gap-8 px-6 md:px-10 lg:px-20">
+        <Reveal className="max-w-[640px]">
+          <h2 className="font-serif text-[36px] font-normal leading-[1.16] tracking-[-1.4px] text-[var(--text-primary)] md:text-5xl md:leading-[1.2] md:tracking-[-1.8px]">
+            Thiết bị bán hàng tinh tế, tối ưu cho mọi mô hình kinh doanh.
+          </h2>
+          <p className="mt-4 text-base font-medium leading-6 tracking-[-0.24px] text-[var(--text-secondary)]">
+            Thiết kế hiện đại, vận hành đơn giản, đáp ứng trọn vẹn nhu cầu kinh doanh của bạn.
+          </p>
+          <button className="mt-3 border-b border-current text-lg font-semibold leading-[26px] tracking-[-0.18px] text-[var(--text-primary)] hover:text-[var(--brand)]">
+            Xem tất cả thiết bị
+          </button>
+        </Reveal>
+        <Reveal delay={140} className="flex gap-4">
+          <button
+            type="button"
+            onClick={previousProduct}
+            disabled={!canGoPrevious}
+            aria-label={content.previousLabel}
+            className="grid size-12 place-items-center text-4xl leading-none text-black transition disabled:cursor-default disabled:opacity-25"
+          >
+            <span aria-hidden>←</span>
+          </button>
+          <button
+            type="button"
+            onClick={nextProduct}
+            disabled={!canGoNext}
+            aria-label={content.nextLabel}
+            className="grid size-12 place-items-center text-4xl leading-none text-black transition disabled:cursor-default disabled:opacity-25"
+          >
+            <span aria-hidden>→</span>
+          </button>
+        </Reveal>
+      </div>
 
-              <div className="mt-auto pt-8">
-                <div className="h-[2px] w-full rounded-full bg-[rgba(15,23,42,0.08)]">
-                  <div
-                    className="h-full rounded-full bg-[var(--text-primary)] transition-[width] duration-[420ms] ease-in-out"
-                    style={{ width: progressWidth }}
-                  />
-                </div>
-              </div>
-            </div>
+      <div
+        ref={viewportRef}
+        className="mt-12 overflow-hidden px-6 pb-3 scroll-smooth md:px-10 lg:px-10"
+      >
+        <Reveal
+          mode="stagger"
+          delay={120}
+          className="flex items-stretch gap-6"
+        >
+          {deviceCards.map((item, index) => {
+            const isActive = activeIndex === index;
 
-            <div className="relative min-h-[390px] overflow-hidden rounded-[24px]">
-              {previousImage ? (
-                <Image
-                  src={previousImage}
-                  alt={title}
-                  fill
-                  sizes="(min-width: 768px) 40vw, 100vw"
-                  style={imageTransitionStyle}
-                  className={`object-contain object-center p-5 transition-[opacity,transform] duration-[1280ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,transform] md:p-7 ${
-                    imageTransitionActive
-                      ? "translate-y-[4px] opacity-0"
-                      : "translate-y-0 opacity-100"
-                  }`}
-                />
-              ) : null}
-              <Image
-                src={currentImage}
-                alt={title}
-                fill
-                sizes="(min-width: 768px) 40vw, 100vw"
-                onLoad={() => {
-                  if (!incomingImageReady && previousImageIndex !== null) {
-                    setIncomingImageReady(true);
-                    requestAnimationFrame(() => {
-                      setImageTransitionActive(true);
-                    });
-                  }
+            return (
+              <article
+                key={item.title}
+                ref={(node) => {
+                  cardRefs.current[index] = node;
                 }}
-                style={imageTransitionStyle}
-                className={`object-contain object-center p-5 transition-[opacity,transform] duration-[1280ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,transform] md:p-7 ${
-                  previousImageIndex === null
-                    ? "translate-y-0 opacity-100"
-                    : incomingImageReady && imageTransitionActive
-                      ? "translate-y-0 opacity-100"
-                      : "translate-y-[4px] opacity-0"
+                style={
+                  {
+                    "--stagger-index": index,
+                    transitionProperty: "width, transform, box-shadow, opacity",
+                    transitionDuration: "700ms, 700ms, 700ms, 560ms",
+                    transitionTimingFunction:
+                      "cubic-bezier(0.37,0,0.63,1), cubic-bezier(0.37,0,0.63,1), cubic-bezier(0.37,0,0.63,1), cubic-bezier(0.25,0.46,0.45,0.94)",
+                  } as CSSProperties
+                }
+                onMouseMove={() => activateProduct(index)}
+                onFocus={() => activateProduct(index)}
+                tabIndex={0}
+                className={`motion-stagger-item group relative h-[360px] shrink-0 cursor-pointer overflow-hidden bg-[#f7f6f5] outline-none transition-[width,transform,box-shadow] duration-[1000ms] ease-[cubic-bezier(0.37,0,0.63,1)] will-change-[width,transform] md:h-[400px] ${
+                  isActive
+                    ? "z-10 w-[min(340px,calc(100vw-48px))] -translate-y-1 shadow-[0_22px_70px_rgba(0,0,0,0.14)] md:w-[436px] lg:w-[540px]"
+                    : "w-[min(320px,calc(100vw-48px))] translate-y-0 md:w-[400px] lg:w-[460px]"
                 }`}
-              />
-            </div>
-          </div>
-        </div>
+              >
+                <div
+                  className={`absolute inset-0 flex flex-col p-6 transition-[opacity,transform] duration-[860ms] ease-[cubic-bezier(0.37,0,0.63,1)] ${
+                    isActive ? "-translate-x-3 opacity-0" : "translate-x-0 opacity-100"
+                  }`}
+                  aria-hidden={isActive}
+                >
+                  <div className="relative min-h-0 flex-1">
+                    <Image
+                      src={withBasePath(item.image)}
+                      alt={item.title}
+                      fill
+                      sizes="(min-width: 1024px) 540px, (min-width: 768px) 436px, 340px"
+                      className={`object-contain transition-transform duration-[1000ms] ease-[cubic-bezier(0.37,0,0.63,1)] ${
+                        isActive ? "scale-[1.015]" : "scale-100"
+                      }`}
+                    />
+                  </div>
+                  <h3 className="mt-4 text-xl font-semibold leading-7 tracking-[-0.2px] text-[var(--text-primary)] underline underline-offset-4 transition-colors duration-300 group-hover:text-[var(--brand)]">
+                    {item.title}
+                  </h3>
+                </div>
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex justify-center">
-          <div className="pointer-events-auto relative -mb-px translate-y-1/2">
-            <div
-              className="absolute inset-x-0 -top-3 bottom-1/2 rounded-t-full bg-white"
-              aria-hidden="true"
-            />
-            <div className="relative flex items-center gap-1 rounded-full border border-[rgba(15,23,42,0.08)] bg-white p-1">
-              <button
-                onClick={prevProduct}
-                aria-label={content.previousLabel}
-                className="grid h-10 w-10 cursor-pointer place-items-center rounded-full text-[var(--text-primary)] transition-all duration-[200ms] ease-out hover:bg-[var(--surface-subtle)] hover:text-[var(--brand)]"
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
+                <div
+                  className={`absolute inset-0 transition-[opacity,transform] duration-[940ms] ease-[cubic-bezier(0.37,0,0.63,1)] ${
+                    isActive ? "translate-x-0 scale-100 opacity-100" : "translate-x-4 scale-[1.025] opacity-0"
+                  }`}
+                  aria-hidden={!isActive}
                 >
-                  <path
-                    d="M14.5 6.5L9 12L14.5 17.5"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                  <Image
+                    src={withBasePath(item.hoverImage ?? item.image)}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 540px, (min-width: 768px) 436px, 340px"
+                    className="object-cover"
                   />
-                </svg>
-              </button>
-              <button
-                onClick={nextProduct}
-                aria-label={content.nextLabel}
-                className="grid h-10 w-10 cursor-pointer place-items-center rounded-full text-[var(--text-primary)] transition-all duration-[200ms] ease-out hover:bg-[var(--surface-subtle)] hover:text-[var(--brand)]"
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M9.5 6.5L15 12L9.5 17.5"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </Reveal>
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_58%,rgba(0,0,0,0.66)_84%)]" />
+                  <div className="absolute inset-x-0 bottom-0 p-6">
+                    <h3 className="text-xl font-semibold leading-7 tracking-[-0.2px] text-white underline underline-offset-4">
+                      {item.title}
+                    </h3>
+                    <p
+                      className={`mt-3 max-w-[360px] text-sm font-normal leading-[18px] tracking-[-0.14px] text-white transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        isActive
+                          ? "translate-y-0 opacity-100"
+                          : "pointer-events-none translate-y-2 opacity-0"
+                      }`}
+                    >
+                      {item.hoverDescription}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </Reveal>
+      </div>
     </section>
   );
 }
