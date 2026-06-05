@@ -1,11 +1,15 @@
-/** Raster paths from Figma export; served as WebP after `npm run optimize:images`. */
+/** Figma asset path; raster files are served as WebP after `npm run optimize:images`. */
 export const figmaImage = (name: string) => {
+  if (/\.svg$/i.test(name)) {
+    return `/images/figma/${name}`;
+  }
   const normalized = name.replace(/\.(png|jpe?g)$/i, "");
   return `/images/figma/${normalized}.webp`;
 };
 
-/** Any raster under /public (e.g. /images/get-started.png → .webp). */
-export const publicImage = (imagePath: string) => imagePath.replace(/\.(png|jpe?g)$/i, ".webp");
+/** Raster under /public (e.g. /images/get-started.png → .webp). SVG paths are unchanged. */
+export const publicImage = (imagePath: string) =>
+  /\.svg$/i.test(imagePath) ? imagePath : imagePath.replace(/\.(png|jpe?g)$/i, ".webp");
 
 export const deviceCards = [
   {
