@@ -97,6 +97,7 @@ export default function HeroSection({ locale, content }: HeroSectionProps) {
   const collageTextOpacity = smoothstep(mapRange(scrollProgress, 0.52, 0.76));
   const whiteSceneOpacity = smoothstep(mapRange(scrollProgress, 0.14, 0.5));
   const headerOnLight = scrollProgress > 0.42;
+  const headerOpacity = 1 - smoothstep(mapRange(scrollProgress, 0.16, 0.36));
   const mainCardStyle = {
     left: `${lerp(0, 44.5, collageProgress)}%`,
     top: `${lerp(0, 28, collageProgress) + lerp(0, 3, settleProgress)}vh`,
@@ -175,7 +176,13 @@ export default function HeroSection({ locale, content }: HeroSectionProps) {
           />
         </div>
 
-      <header className="absolute inset-x-0 top-0 z-30">
+      <header
+        className="absolute inset-x-0 top-0 z-30 transition-opacity duration-200"
+        style={{
+          opacity: headerOpacity,
+          pointerEvents: headerOpacity > 0.08 ? "auto" : "none",
+        }}
+      >
         <div className="flex h-[60px] items-center gap-10 px-6 md:px-10 lg:px-20">
           <Link href={`/${locale}`} className="relative h-10 w-[102px] shrink-0">
             <Image
@@ -295,14 +302,16 @@ export default function HeroSection({ locale, content }: HeroSectionProps) {
           </Reveal>
         </div>
         <div
-          className="pointer-events-none absolute inset-x-6 top-[70%] z-10 mx-auto max-w-[1120px] -translate-y-1/2 text-center md:inset-x-10"
+          className="pointer-events-none absolute inset-x-0 top-[51%] z-25 flex justify-center px-6 md:top-[52%] md:px-10"
           style={{
             opacity: collageTextOpacity,
-            transform: `translateY(calc(-50% + ${lerp(42, 0, collageTextOpacity)}px))`,
+            transform: `translateY(${lerp(42, 0, collageTextOpacity)}px)`,
           }}
         >
-          <p className="font-serif text-[34px] font-normal leading-[1.12] tracking-[-1px] text-[#060606] md:text-[54px] md:tracking-[-1.8px]">
-            Nền tảng thanh toán và quản lý toàn diện cho mọi doanh nghiệp.
+          <p className="max-w-[min(52rem,46vw)] text-center font-serif text-[34px] font-normal leading-[1.12] tracking-[-1px] text-[#060606] md:text-[54px] md:leading-[1.08] md:tracking-[-1.8px]">
+            Nền tảng thanh toán và quản lý
+            <br />
+            toàn diện cho mọi doanh nghiệp.
           </p>
         </div>
       </div>
