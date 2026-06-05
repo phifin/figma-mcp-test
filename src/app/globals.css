@@ -2,21 +2,21 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #07111f;
+  --foreground: #060606;
   --surface: #ffffff;
-  --surface-subtle: #f6f8fb;
-  --surface-muted: #eef3f8;
-  --border-subtle: rgba(15, 23, 42, 0.09);
-  --border-strong: rgba(37, 99, 235, 0.18);
-  --text-primary: #07111f;
-  --text-secondary: #42526b;
-  --text-muted: #66758f;
-  --brand: #2563eb;
-  --brand-strong: #1d4ed8;
-  --brand-soft: #e8f0ff;
-  --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.08);
-  --shadow-hover: 0 26px 64px rgba(15, 23, 42, 0.14);
-  --radius-card: 24px;
+  --surface-subtle: #fafafa;
+  --surface-muted: #f5f5f5;
+  --border-subtle: rgba(6, 6, 6, 0.12);
+  --border-strong: rgba(0, 86, 235, 0.2);
+  --text-primary: #060606;
+  --text-secondary: #666666;
+  --text-muted: #80848b;
+  --brand: #0056eb;
+  --brand-strong: #0056eb;
+  --brand-soft: #eaf1ff;
+  --shadow-soft: 0 16px 32px -12px rgba(88, 92, 95, 0.16);
+  --shadow-hover: 0 20px 42px -16px rgba(88, 92, 95, 0.24);
+  --radius-card: 16px;
   --radius-button: 999px;
   --motion-fast: 200ms;
   --motion-ui: 260ms;
@@ -24,6 +24,8 @@
   --motion-slider: 420ms;
   --motion-slow: 820ms;
   --motion-stagger: 80ms;
+  --ease-square: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out-smooth: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
@@ -43,9 +45,7 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(circle at top, rgba(37, 99, 235, 0.08), transparent 24%),
-    linear-gradient(180deg, #ffffff 0%, #fbfdff 52%, #ffffff 100%);
+  background: #ffffff;
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   text-rendering: optimizeLegibility;
@@ -54,12 +54,12 @@ body {
 button,
 a {
   transition:
-    transform var(--motion-fast) ease-out,
-    box-shadow var(--motion-fast) ease-out,
-    border-color var(--motion-fast) ease-out,
-    background-color var(--motion-fast) ease-out,
-    color var(--motion-fast) ease-out,
-    opacity var(--motion-fast) ease-out;
+    transform var(--motion-fast) var(--ease-square),
+    box-shadow var(--motion-fast) var(--ease-square),
+    border-color var(--motion-fast) var(--ease-square),
+    background-color var(--motion-fast) var(--ease-square),
+    color var(--motion-fast) var(--ease-square),
+    opacity var(--motion-fast) var(--ease-square);
 }
 
 button:not(:disabled),
@@ -97,7 +97,7 @@ img {
 .surface-card {
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 248, 251, 0.95));
+  background: #ffffff;
   box-shadow: var(--shadow-soft);
 }
 
@@ -110,11 +110,11 @@ img {
 
 .interactive-card {
   transition:
-    transform var(--motion-fast) ease-out,
-    box-shadow var(--motion-fast) ease-out,
-    border-color var(--motion-fast) ease-out,
-    background-color var(--motion-fast) ease-out,
-    opacity var(--motion-fast) ease-out;
+    transform var(--motion-fast) var(--ease-square),
+    box-shadow var(--motion-fast) var(--ease-square),
+    border-color var(--motion-fast) var(--ease-square),
+    background-color var(--motion-fast) var(--ease-square),
+    opacity var(--motion-fast) var(--ease-square);
 }
 
 .interactive-card:hover {
@@ -213,22 +213,136 @@ img {
   transform: translateX(4px);
 }
 
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@keyframes hero-drift {
+  0% {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: scale(1.08) translate3d(-1.2%, -1%, 0);
+  }
+}
+
+@keyframes industry-sign-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -44%) scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.motion-hero-media {
+  animation: hero-drift 18s var(--ease-square) both alternate infinite;
+  will-change: transform;
+}
+
+.motion-float-soft {
+  animation: float-soft 4.8s ease-in-out infinite;
+  animation-delay: var(--float-delay, 0ms);
+  will-change: transform;
+}
+
+.motion-button {
+  will-change: transform;
+}
+
+.motion-button:hover {
+  transform: translateY(-1px) scale(1.015);
+}
+
+.motion-button:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.motion-image-zoom {
+  transition: transform 520ms var(--ease-out-smooth), opacity 360ms var(--ease-square);
+  will-change: transform;
+}
+
+.group:hover .motion-image-zoom,
+.motion-image-zoom:hover {
+  transform: scale(1.045);
+}
+
+.motion-card-lift {
+  transition:
+    transform 260ms var(--ease-square),
+    box-shadow 260ms var(--ease-square),
+    border-color 260ms var(--ease-square),
+    opacity 260ms var(--ease-square);
+  will-change: transform;
+}
+
+.motion-card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 42px -18px rgba(6, 6, 6, 0.24);
+}
+
 [data-reveal] {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(22px);
   transition:
-    opacity var(--motion-medium) ease-out,
-    transform var(--motion-medium) ease-out;
+    opacity var(--motion-medium) var(--ease-square),
+    transform var(--motion-medium) var(--ease-square);
   transition-delay: var(--reveal-delay, 0ms);
   will-change: opacity, transform;
 }
 
 [data-reveal="hero"] {
-  transform: translateY(16px);
+  transform: translateY(24px);
   transition-duration: var(--motion-slow);
 }
 
+[data-reveal="right"] {
+  transform: translateX(34px);
+}
+
+[data-reveal="scale"] {
+  transform: translateY(20px) scale(0.965);
+}
+
+[data-reveal="stagger"] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
 [data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-reveal="right"].is-visible,
+[data-reveal="scale"].is-visible {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+[data-reveal="stagger"] > .motion-stagger-item {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity var(--motion-medium) var(--ease-square),
+    transform var(--motion-medium) var(--ease-square);
+  transition-delay: calc(var(--reveal-delay, 0ms) + (var(--stagger-index, 0) * var(--motion-stagger)));
+  will-change: opacity, transform;
+}
+
+[data-reveal="stagger"].is-visible > .motion-stagger-item {
   opacity: 1;
   transform: translateY(0);
 }
@@ -237,8 +351,8 @@ img {
   opacity: 0;
   transform: translateY(12px);
   transition:
-    opacity var(--motion-medium) ease-out,
-    transform var(--motion-medium) ease-out;
+    opacity var(--motion-medium) var(--ease-square),
+    transform var(--motion-medium) var(--ease-square);
   transition-delay: var(--motion-delay, 0ms);
 }
 

@@ -4,16 +4,27 @@ import type { CSSProperties, ElementType, ReactNode } from "react";
 import { useEffect, useRef } from "react";
 
 type RevealProps = {
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
   delay?: number;
   as?: ElementType;
-  mode?: "default" | "hero";
+  mode?: "default" | "hero" | "right" | "scale" | "stagger";
+  style?: CSSProperties;
 };
 
-export default function Reveal({ children, className = "", delay = 0, as: Tag = "div", mode = "default" }: RevealProps) {
+export default function Reveal({
+  children,
+  className = "",
+  delay = 0,
+  as: Tag = "div",
+  mode = "default",
+  style,
+}: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
-  const style = { "--reveal-delay": `${delay}ms` } as CSSProperties;
+  const revealStyle = {
+    ...style,
+    "--reveal-delay": `${delay}ms`,
+  } as CSSProperties;
 
   useEffect(() => {
     const element = ref.current;
@@ -37,7 +48,7 @@ export default function Reveal({ children, className = "", delay = 0, as: Tag = 
   }, []);
 
   return (
-    <Tag ref={ref} data-reveal={mode === "hero" ? "hero" : "default"} className={className} style={style}>
+    <Tag ref={ref} data-reveal={mode} className={className} style={revealStyle}>
       {children}
     </Tag>
   );

@@ -10,8 +10,8 @@ type FooterProps = {
 
 export default function Footer({ content }: FooterProps) {
   return (
-    <footer className="bg-black text-white">
-      <div className={`${sectionContainer} pb-6 pt-12`}>
+    <footer className="bg-[#1a1a1a] text-white">
+      <div className={`${sectionContainer} pb-6 pt-10`}>
         <div className="grid gap-12 md:grid-cols-[minmax(680px,1.7fr)_minmax(0,0.85fr)] md:items-start md:gap-14 lg:gap-18">
           <div className="max-w-none">
             <Image
@@ -19,15 +19,16 @@ export default function Footer({ content }: FooterProps) {
               alt="Unipay logo"
               width={100}
               height={40}
-              className="h-10 w-auto"
+              className="h-10 w-auto brightness-0 invert"
+              style={{ width: "auto", height: "40px" }}
             />
-            <p className="mt-4 max-w-[620px] text-[22px] font-semibold leading-tight">
+            <p className="mt-4 max-w-[620px] text-xl font-semibold leading-7 tracking-[-0.2px]">
               {content.companyName}
             </p>
-            <p className="mt-4 w-full max-w-none text-sm leading-6 text-white/60">
+            <p className="mt-3 w-full max-w-none text-sm leading-5 tracking-[-0.12px] text-white/60">
               {content.address}
             </p>
-            <p className="mt-5 text-sm text-white/85">{content.contact}</p>
+            <p className="mt-5 text-sm tracking-[-0.12px] text-[#f1f5f9]">{content.contact}</p>
           </div>
           <div className="grid gap-x-14 gap-y-10 sm:grid-cols-2 md:grid-cols-2 md:gap-x-16 md:gap-y-12 lg:gap-x-20">
             {content.groups.map((group) => (

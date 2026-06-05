@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { IBM_Plex_Mono, Inter, Source_Serif_4 } from "next/font/google";
+import { IBM_Plex_Mono, Inter, STIX_Two_Text } from "next/font/google";
 
 import { locales } from "@/i18n/config";
 import { getLocaleFromParam } from "@/i18n/routing";
@@ -19,9 +19,10 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const sourceSerif = Source_Serif_4({
+const stixTwoText = STIX_Two_Text({
   variable: "--font-source-serif",
   subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -46,10 +47,9 @@ export default async function LocaleLayout({
   return (
     <html
       lang={currentLocale}
-      className={`${inter.variable} ${ibmPlexMono.variable} ${sourceSerif.variable} h-full antialiased`}
+      className={`${inter.variable} ${ibmPlexMono.variable} ${stixTwoText.variable} h-full antialiased`}
     >
       <body className="font-sans min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
-

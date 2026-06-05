@@ -1,107 +1,118 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 import Reveal from "@/components/ui/Reveal";
-import SectionHeading from "@/components/ui/SectionHeading";
 import type { Dictionary } from "@/i18n/types";
-import { sectionContainer, sectionSpacing, stepImages } from "@/lib/landing-content";
+import { withBasePath } from "@/lib/base-path";
+import { figmaImage } from "@/lib/figma-assets";
 
 type StepSliderSectionProps = {
   content: Dictionary["steps"];
 };
 
+const stepImages = [
+  figmaImage("step-1.png"),
+  figmaImage("step-2.png"),
+  figmaImage("step-3.png"),
+];
+
 export default function StepSliderSection({ content }: StepSliderSectionProps) {
-  const [stepIndex, setStepIndex] = useState(0);
-  const viewportRef = useRef<HTMLDivElement | null>(null);
-  const [viewportWidth, setViewportWidth] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setStepIndex((prev) => (prev + 1) % content.items.length);
-    }, 3500);
-
-    return () => clearInterval(id);
-  }, [content.items.length]);
-
-  useEffect(() => {
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-
-    const updateWidth = () => setViewportWidth(viewport.clientWidth);
-    updateWidth();
-
-    const observer = new ResizeObserver(() => updateWidth());
-    observer.observe(viewport);
-
-    return () => observer.disconnect();
-  }, []);
-
-  const prevStep = () => setStepIndex((s) => (s - 1 + content.items.length) % content.items.length);
-  const nextStep = () => setStepIndex((s) => (s + 1) % content.items.length);
-  const isDesktop = viewportWidth >= 768;
-  const previewWidth = viewportWidth ? (isDesktop ? 96 : 36) : 96;
-  const slideGap = isDesktop ? 24 : 16;
-  const slideWidth = viewportWidth ? Math.max(viewportWidth - previewWidth, 0) : 0;
-  const translateX = slideWidth ? stepIndex * (slideWidth + slideGap) : 0;
-  const slidesWithPreview = [...content.items.map((step, idx) => ({ step, image: stepImages[idx], clone: false })), { step: content.items[0], image: stepImages[0], clone: true }];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const canGoPrevious = activeIndex > 0;
+  const canGoNext = activeIndex < content.items.length - 1;
+  const previousSlide = () => setActiveIndex((current) => Math.max(current - 1, 0));
+  const nextSlide = () =>
+    setActiveIndex((current) => Math.min(current + 1, content.items.length - 1));
 
   return (
-    <section className={`ui-section ui-divider ${sectionContainer} ${sectionSpacing} flex flex-col gap-10`}>
-      <div className="flex flex-wrap items-end justify-between gap-8">
-        <SectionHeading
-          title={content.title}
-          description={content.description}
-        />
-        <Reveal delay={180} className="flex gap-2.5">
+    <section className="bg-white py-20">
+      <div className="flex items-end justify-between gap-8 px-6 md:px-10 lg:px-20">
+        <Reveal className="max-w-[640px]">
+          <h2 className="font-serif text-[36px] font-normal leading-[1.16] tracking-[-1.4px] text-[var(--text-primary)] md:text-5xl md:leading-[1.2] md:tracking-[-1.8px]">
+            {content.title}
+          </h2>
+          <p className="mt-4 text-lg font-medium leading-[26px] text-[var(--text-secondary)]">
+            {content.description}
+          </p>
+        </Reveal>
+        <Reveal delay={140} className="flex gap-4">
           <button
-            onClick={prevStep}
+            type="button"
+            onClick={previousSlide}
+            disabled={!canGoPrevious}
             aria-label={content.previousLabel}
-            className="grid h-11 w-11 place-items-center rounded-full border border-[rgba(15,23,42,0.1)] bg-[rgba(246,248,251,0.92)] text-[var(--text-primary)] transition-all duration-300 ease-out hover:border-[rgba(37,99,235,0.18)] hover:bg-white hover:text-[var(--brand)]"
+            className="grid size-12 place-items-center text-4xl leading-none text-black transition disabled:cursor-default disabled:opacity-25"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M14.5 6.5L9 12L14.5 17.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <span aria-hidden>←</span>
           </button>
           <button
-            onClick={nextStep}
+            type="button"
+            onClick={nextSlide}
+            disabled={!canGoNext}
             aria-label={content.nextLabel}
-            className="grid h-11 w-11 place-items-center rounded-full border border-[rgba(15,23,42,0.1)] bg-[rgba(246,248,251,0.92)] text-[var(--text-primary)] transition-all duration-300 ease-out hover:border-[rgba(37,99,235,0.18)] hover:bg-white hover:text-[var(--brand)]"
+            className="grid size-12 place-items-center text-4xl leading-none text-black transition disabled:cursor-default disabled:opacity-25"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M9.5 6.5L15 12L9.5 17.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <span aria-hidden>→</span>
           </button>
         </Reveal>
       </div>
-      <Reveal className="overflow-hidden rounded-[32px]">
-        <div ref={viewportRef} className="overflow-hidden rounded-[32px]">
-          <div className="flex gap-4 transition-transform duration-[420ms] ease-in-out md:gap-6" style={{ transform: `translateX(-${translateX}px)` }}>
-            {slidesWithPreview.map(({ step, image, clone }, idx) => {
-              const { number, title, description } = step;
-              const isActive = idx === stepIndex;
 
-              return (
-                <div
-                  key={`${title}-${clone ? "preview" : idx}`}
-                  className={`w-[calc(100%-2.25rem)] shrink-0 transition-[opacity,transform] duration-[260ms] ease-out md:w-[calc(100%-6rem)] ${isActive ? "scale-[1.01] opacity-100" : "scale-[0.995] opacity-88"}`}
-                  style={slideWidth ? { width: `${slideWidth}px` } : undefined}
-                >
-                  <article className="grid min-h-[500px] items-center gap-10 overflow-hidden rounded-[32px] border border-[rgba(15,23,42,0.08)] bg-[#f4f5f1] px-8 py-8 shadow-[0_22px_56px_rgba(15,23,42,0.08)] md:grid-cols-[minmax(0,1fr)_minmax(420px,520px)] md:gap-12 md:px-14 md:py-14">
-                    <div className="flex flex-col justify-center">
-                      <p className="text-7xl font-bold tracking-tight text-[var(--text-primary)] md:text-[88px]">{number}</p>
-                      <h3 className="mt-12 text-4xl font-semibold tracking-tight text-[var(--text-primary)] md:text-[44px]">{title}</h3>
-                      <p className="ui-body mt-3 max-w-xl">{description}</p>
+      <Reveal
+        mode="scale"
+        delay={160}
+        className="mx-auto mt-16 max-w-[1440px] px-6 pb-2 md:px-10 lg:px-20"
+      >
+        <div className="overflow-hidden">
+          <div
+            className="flex gap-6 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{
+              transform: `translateX(calc(-${activeIndex * 100}% - ${activeIndex * 24}px))`,
+            }}
+          >
+            {content.items.map((step, index) => (
+              <div key={step.title} className="w-full shrink-0">
+                <article className="group grid h-auto min-h-[500px] w-full gap-8 overflow-hidden rounded-2xl bg-[#f5f5f5] px-7 py-10 md:grid-cols-[minmax(0,1fr)_400px] md:items-end md:gap-16 md:px-20 md:pb-20 md:pt-20">
+                  <div className="flex h-full flex-col justify-between gap-12 md:pb-0">
+                    <p className="font-serif text-[72px] font-normal leading-[1.1] tracking-[-3px] text-[#1a1a1a] md:text-[80px] md:tracking-[-3.8px]">
+                      {step.number}
+                    </p>
+                    <div>
+                      <h3 className="text-[32px] font-semibold leading-9 text-[var(--text-primary)]">
+                        {step.title}
+                      </h3>
+                      <p className="mt-2 max-w-[560px] text-base leading-6 tracking-[-0.24px] text-[var(--text-primary)]">
+                        {step.description}
+                      </p>
                     </div>
-                    <div className="relative h-[320px] w-full self-stretch overflow-hidden rounded-[26px] md:h-full md:min-h-[372px]">
-                      <Image src={image} alt={title} fill sizes="(min-width: 768px) 36vw, 100vw" className="object-cover object-center" />
-                    </div>
-                  </article>
-                </div>
-              );
-            })}
+                  </div>
+                  <div className="relative min-h-[300px] overflow-hidden rounded-t-[24px] border-[12px] border-white/60 shadow-[0_16px_32px_-12px_rgba(88,92,95,0.1)] md:h-[376px]">
+                    <Image
+                      src={withBasePath(stepImages[index])}
+                      alt={step.title}
+                      fill
+                      sizes="400px"
+                      className="motion-image-zoom object-cover"
+                    />
+                  </div>
+                </article>
+              </div>
+            ))}
           </div>
+        </div>
+        <div className="mt-6 flex justify-center gap-2">
+          {content.items.map((step, index) => (
+            <button
+              key={step.title}
+              type="button"
+              onClick={() => setActiveIndex(index)}
+              aria-label={`Đi tới ${step.title}`}
+              className={`h-1.5 rounded-full transition-all ${
+                index === activeIndex ? "w-8 bg-[#1a1a1a]" : "w-1.5 bg-[#1a1a1a]/25"
+              }`}
+            />
+          ))}
         </div>
       </Reveal>
     </section>
