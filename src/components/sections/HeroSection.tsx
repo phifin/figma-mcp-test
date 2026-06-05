@@ -10,7 +10,7 @@ import Reveal from "@/components/ui/Reveal";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { withBasePath } from "@/lib/base-path";
-import { figmaImage } from "@/lib/figma-assets";
+import { figmaImage, publicImage } from "@/lib/figma-assets";
 
 type HeroSectionProps = {
   locale: Locale;
@@ -27,9 +27,9 @@ const mapRange = (value: number, start: number, end: number) =>
   clamp((value - start) / (end - start));
 
 const collageImages = [
-  { src: "/images/product-showcase/1.png", x: 3, y: 28, w: 10, h: 20, rotate: -2, delay: 0.18 },
+  { src: publicImage("/images/product-showcase/1.png"), x: 3, y: 28, w: 10, h: 20, rotate: -2, delay: 0.18 },
   { src: figmaImage("industry-hotel.png"), x: 14, y: 3, w: 11, h: 20, rotate: -4, delay: 0.24 },
-  { src: "/images/product-showcase/2.png", x: 31, y: 6, w: 10, h: 19, rotate: 2, delay: 0.28 },
+  { src: publicImage("/images/product-showcase/2.png"), x: 31, y: 6, w: 10, h: 19, rotate: 2, delay: 0.28 },
   { src: figmaImage("industry-fnb.png"), x: 58, y: 7, w: 10, h: 19, rotate: -2, delay: 0.32 },
   { src: figmaImage("device-hover-a90.png"), x: 80, y: 4, w: 11, h: 20, rotate: 4, delay: 0.36 },
   { src: figmaImage("industry-retail.png"), x: 17, y: 42, w: 10, h: 20, rotate: -1, delay: 0.34 },
@@ -147,7 +147,7 @@ export default function HeroSection({ locale, content }: HeroSectionProps) {
           style={mainCardStyle}
         >
           <Image
-            src={withBasePath("/images/get-started.png")}
+            src={withBasePath(publicImage("/images/get-started.png"))}
             alt=""
             fill
             priority

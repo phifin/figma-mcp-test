@@ -1,0 +1,310 @@
+{
+  "certs/iso20000.png": {
+    "hash": "44b6a415f9f791aff4f6bb018369e228c6029be57b93d6097814826fe726a080",
+    "webp": "certs/iso20000.webp"
+  },
+  "certs/iso22301.png": {
+    "hash": "bae991659a3f39677f807929a3a56b20b4256c5529268db5758a1c9a8c28a6de",
+    "webp": "certs/iso22301.webp"
+  },
+  "certs/iso27001.png": {
+    "hash": "d19fbc039dcde59ccfa0dd38387799ba76d3986f110f472e22e5a72153a07e2a",
+    "webp": "certs/iso27001.webp"
+  },
+  "certs/pci-dss.png": {
+    "hash": "f54532584cfd614f9e071a67faaeedf370f78a570265f7fe910ddb67e8747540",
+    "webp": "certs/pci-dss.webp"
+  },
+  "images/figma/ai-assistant.png": {
+    "hash": "51d1d534fd3c7cb87c232cb602779e29a0f366bc2c1b745f10f77fc26c422c74",
+    "webp": "images/figma/ai-assistant.webp"
+  },
+  "images/figma/bank-acb-correct.png": {
+    "hash": "fa44d750d8b62b830beb988f13d644a6416e3f7413bcd8bbd4390243c344c68f",
+    "webp": "images/figma/bank-acb-correct.webp"
+  },
+  "images/figma/bank-acb.png": {
+    "hash": "fa44d750d8b62b830beb988f13d644a6416e3f7413bcd8bbd4390243c344c68f",
+    "webp": "images/figma/bank-acb.webp"
+  },
+  "images/figma/bank-bidv-alt.png": {
+    "hash": "47ffa5195f8179cffe13bd0a20d64fd5b6b21f6dd98ebc21e330bc28cc3c0402",
+    "webp": "images/figma/bank-bidv-alt.webp"
+  },
+  "images/figma/bank-bidv-correct.png": {
+    "hash": "47ffa5195f8179cffe13bd0a20d64fd5b6b21f6dd98ebc21e330bc28cc3c0402",
+    "webp": "images/figma/bank-bidv-correct.webp"
+  },
+  "images/figma/bank-bidv.png": {
+    "hash": "2a64e39cf8e211b68c3d3a4c07df19a808ae5098189b146b5fefd1a073f35417",
+    "webp": "images/figma/bank-bidv.webp"
+  },
+  "images/figma/bank-bvbank-correct.png": {
+    "hash": "2a64e39cf8e211b68c3d3a4c07df19a808ae5098189b146b5fefd1a073f35417",
+    "webp": "images/figma/bank-bvbank-correct.webp"
+  },
+  "images/figma/bank-hdbank-correct.png": {
+    "hash": "ff1744985e8f0ea3c3be7848861022e47f76ae52f9179b898b32b9fdf053d6c4",
+    "webp": "images/figma/bank-hdbank-correct.webp"
+  },
+  "images/figma/bank-hdbank.png": {
+    "hash": "ff1744985e8f0ea3c3be7848861022e47f76ae52f9179b898b32b9fdf053d6c4",
+    "webp": "images/figma/bank-hdbank.webp"
+  },
+  "images/figma/bank-mb-correct.png": {
+    "hash": "240b8fc053f3312ffdbbbb1355799e6ea1434dc367addf2bc62c8bdda05b7961",
+    "webp": "images/figma/bank-mb-correct.webp"
+  },
+  "images/figma/bank-mb.png": {
+    "hash": "240b8fc053f3312ffdbbbb1355799e6ea1434dc367addf2bc62c8bdda05b7961",
+    "webp": "images/figma/bank-mb.webp"
+  },
+  "images/figma/bank-ocb-correct.png": {
+    "hash": "b12e775f10a8f3928c51d1b70b654de7fc9ab1af41869f9284e7a848136b6d5e",
+    "webp": "images/figma/bank-ocb-correct.webp"
+  },
+  "images/figma/bank-ocb.png": {
+    "hash": "b12e775f10a8f3928c51d1b70b654de7fc9ab1af41869f9284e7a848136b6d5e",
+    "webp": "images/figma/bank-ocb.webp"
+  },
+  "images/figma/bank-techcombank.png": {
+    "hash": "3b68192fe90c3653296f6a141bca251bcdb5fafd5d6f9bc8dd3577625d17cfcf",
+    "webp": "images/figma/bank-techcombank.webp"
+  },
+  "images/figma/bank-vib-correct.png": {
+    "hash": "961346a32e0d4c40a12932e14d6f5bf1a545f24b23833cde22679222083afb36",
+    "webp": "images/figma/bank-vib-correct.webp"
+  },
+  "images/figma/bank-vib.png": {
+    "hash": "961346a32e0d4c40a12932e14d6f5bf1a545f24b23833cde22679222083afb36",
+    "webp": "images/figma/bank-vib.webp"
+  },
+  "images/figma/bank-vietbank-correct.png": {
+    "hash": "3b68192fe90c3653296f6a141bca251bcdb5fafd5d6f9bc8dd3577625d17cfcf",
+    "webp": "images/figma/bank-vietbank-correct.webp"
+  },
+  "images/figma/bank-vietcombank-correct.png": {
+    "hash": "e6ce4776fbe7705cb465240bafca94879dca6e7791fa3ece1b360382ab8ea8ca",
+    "webp": "images/figma/bank-vietcombank-correct.webp"
+  },
+  "images/figma/bank-vietcombank.png": {
+    "hash": "e6ce4776fbe7705cb465240bafca94879dca6e7791fa3ece1b360382ab8ea8ca",
+    "webp": "images/figma/bank-vietcombank.webp"
+  },
+  "images/figma/bank-vietinbank-correct.png": {
+    "hash": "b57f54b61651a47057310ce8492ead173def1fc85139a799fdddd1de28a36c18",
+    "webp": "images/figma/bank-vietinbank-correct.webp"
+  },
+  "images/figma/bank-vietinbank.png": {
+    "hash": "b57f54b61651a47057310ce8492ead173def1fc85139a799fdddd1de28a36c18",
+    "webp": "images/figma/bank-vietinbank.webp"
+  },
+  "images/figma/cta-base.png": {
+    "hash": "7862b626d5311853defd576a741305d36be1e1cc7b41fe8aa38635ade6c884c7",
+    "webp": "images/figma/cta-base.webp"
+  },
+  "images/figma/cta-overlay.png": {
+    "hash": "74143c9a2818c8cabca599907ba868d9b120796c114033c2e491806abb647fd3",
+    "webp": "images/figma/cta-overlay.webp"
+  },
+  "images/figma/device-a90.png": {
+    "hash": "5f786c8838569a8b88f0c7ef93630e29d52a25fdd2de74146769e559ebcc3074",
+    "webp": "images/figma/device-a90.webp"
+  },
+  "images/figma/device-c20.png": {
+    "hash": "05a67a3ca714d2f478e22ced8366f5e5477a3a116047235ada6f74a42f82904d",
+    "webp": "images/figma/device-c20.webp"
+  },
+  "images/figma/device-ekyc.png": {
+    "hash": "707bb4f01e73626c0ec7d0b38cefef17414bd0511bc25eede787dfebf1c87bcb",
+    "webp": "images/figma/device-ekyc.webp"
+  },
+  "images/figma/device-hover-a90.png": {
+    "hash": "40009d2e0f3d2fccf71ff234388cbc2656189290cca1de6ba52723d76d7cb738",
+    "webp": "images/figma/device-hover-a90.webp"
+  },
+  "images/figma/device-hover-base.png": {
+    "hash": "89bf245a2fb92e7580452ae416dae79600758255cb179198e4b63b6f04213346",
+    "webp": "images/figma/device-hover-base.webp"
+  },
+  "images/figma/device-hover-c20.png": {
+    "hash": "2e5714dcb93cf476b48d1eaa989067e9aebed4af19a25ff786eb1f68000ae83a",
+    "webp": "images/figma/device-hover-c20.webp"
+  },
+  "images/figma/device-hover-kiosk.png": {
+    "hash": "10848f41422a0404e0a690ba633c5daf844980e46f446749ed724f92e44a169d",
+    "webp": "images/figma/device-hover-kiosk.webp"
+  },
+  "images/figma/device-kiosk.png": {
+    "hash": "512aea80483d2f82cc3ba68b9a9e2121734fa92e2d60ec276a36d67fe813f4ad",
+    "webp": "images/figma/device-kiosk.webp"
+  },
+  "images/figma/device-q161.png": {
+    "hash": "0f284162816d5490e09db713a3ebddc130bc80c2d7e7294cf0ec0e5ecc03edaa",
+    "webp": "images/figma/device-q161.webp"
+  },
+  "images/figma/device-q191.png": {
+    "hash": "66f85390d719c44080d18e7af4b460c8b9b81deb09c0cf8bd42c8711ae4677a8",
+    "webp": "images/figma/device-q191.webp"
+  },
+  "images/figma/ecosystem-base.png": {
+    "hash": "89bf245a2fb92e7580452ae416dae79600758255cb179198e4b63b6f04213346",
+    "webp": "images/figma/ecosystem-base.webp"
+  },
+  "images/figma/ecosystem-blur.png": {
+    "hash": "32db93858fb48856cf42ec90e5b9f623c77deb12420277848a97ee4a26c8e3f9",
+    "webp": "images/figma/ecosystem-blur.webp"
+  },
+  "images/figma/ecosystem-overlay.png": {
+    "hash": "fca4c2bc7cb9f4590bfeebd01ecc749c87ec1c2057af0269d5d821498accd0f6",
+    "webp": "images/figma/ecosystem-overlay.webp"
+  },
+  "images/figma/hero-blur.png": {
+    "hash": "555394a2ad32864d17ba91f2f24a967119126b43f613fc18e191d7c06460e5f9",
+    "webp": "images/figma/hero-blur.webp"
+  },
+  "images/figma/hero-surface.png": {
+    "hash": "5181d789d7129f53b12984f3daa703605a77d39c6fd67dee3c685f3ccc266d43",
+    "webp": "images/figma/hero-surface.webp"
+  },
+  "images/figma/industry-fnb.png": {
+    "hash": "28269f5f184e4207cfa5325d5071eb79c962a07ea586c45f8647ac099892cb3b",
+    "webp": "images/figma/industry-fnb.webp"
+  },
+  "images/figma/industry-health.png": {
+    "hash": "19614f08b6f2787ea5d3d2b4aa1505857bed6de02ff24f09dd96af38d6b684cd",
+    "webp": "images/figma/industry-health.webp"
+  },
+  "images/figma/industry-hotel.png": {
+    "hash": "bdebd84b2facbe569c5e2c3720d58c17780902bb59d8e521533b014eac6c0840",
+    "webp": "images/figma/industry-hotel.webp"
+  },
+  "images/figma/industry-retail.png": {
+    "hash": "4c7991f6401adba01af98c8f381b3ff1d5f2a96e2e10c76bd2e92b4f37db66b7",
+    "webp": "images/figma/industry-retail.webp"
+  },
+  "images/figma/industry-spa.png": {
+    "hash": "be028bcd426159bd2a94afb753a2c839cbe3357fd2afaf630bf667a7921c977c",
+    "webp": "images/figma/industry-spa.webp"
+  },
+  "images/figma/logo-jcb.png": {
+    "hash": "54d36c69dc21e3b1afe6f6d4df7d8220acd43dad9e79c3ded8bd7753982c9236",
+    "webp": "images/figma/logo-jcb.webp"
+  },
+  "images/figma/logo-napas.png": {
+    "hash": "ae92f69dfa27b7665c6aaf0d64d8a35a72ab1c52be33f114410a9b4ec10a224f",
+    "webp": "images/figma/logo-napas.webp"
+  },
+  "images/figma/payment-bank-base-correct.png": {
+    "hash": "120b4a209e985e38f184e0fea0c7a9a7129d87eab0b982001b45fc3b05d7e007",
+    "webp": "images/figma/payment-bank-base-correct.webp"
+  },
+  "images/figma/payment-bank-correct.jpg": {
+    "hash": "c00e0a158a12d50ac2484551d7fb028ba2ff027ea65f76f5c4cb780990d82a76",
+    "webp": "images/figma/payment-bank-correct.webp"
+  },
+  "images/figma/payment-card-correct.jpg": {
+    "hash": "6f0218505c23ea0157a7799c07a125036919a9ec406856d70581a7bbe6d8a5ef",
+    "webp": "images/figma/payment-card-correct.webp"
+  },
+  "images/figma/payment-main.png": {
+    "hash": "6f0218505c23ea0157a7799c07a125036919a9ec406856d70581a7bbe6d8a5ef",
+    "webp": "images/figma/payment-main.webp"
+  },
+  "images/figma/payment-wallet-base-correct.png": {
+    "hash": "753720b894069cce121a7f2e6ddbb8eed9c7ee621a8b406bf679b28c88f90772",
+    "webp": "images/figma/payment-wallet-base-correct.webp"
+  },
+  "images/figma/payment-wallet-correct.jpg": {
+    "hash": "1cea22873b24c41ea19b1867af8af33f7b77659408452a70ee112677f9443c05",
+    "webp": "images/figma/payment-wallet-correct.webp"
+  },
+  "images/figma/step-1.png": {
+    "hash": "e555531e80f7bbab07abd240ede90c228d15390194cd32464ef72981fea2771c",
+    "webp": "images/figma/step-1.webp"
+  },
+  "images/figma/step-2.png": {
+    "hash": "fd3da3e29018daef915edd9f7755b5690481663964f07df9b046ceb40d7fffc5",
+    "webp": "images/figma/step-2.webp"
+  },
+  "images/figma/step-3.png": {
+    "hash": "89bf245a2fb92e7580452ae416dae79600758255cb179198e4b63b6f04213346",
+    "webp": "images/figma/step-3.webp"
+  },
+  "images/figma/trust-cloud.png": {
+    "hash": "e6595d08464f1230edd6daabc7c095ecb6d1cf8cf12ddf52541312553b51b9a1",
+    "webp": "images/figma/trust-cloud.webp"
+  },
+  "images/figma/trust-iso1.png": {
+    "hash": "11924403bbf65a92d4ceb00778c93e5501887e7c881c6c05d2eba5afa947ff9f",
+    "webp": "images/figma/trust-iso1.webp"
+  },
+  "images/figma/trust-iso2.png": {
+    "hash": "29671163ce2f5d57b5024c924d04ed8ad2e52bf430eb0ab8fb746607bc854944",
+    "webp": "images/figma/trust-iso2.webp"
+  },
+  "images/figma/trust-partner.png": {
+    "hash": "3dd09008739f258750997572ed7eb3cb03b92519e63c2c3fa01c1e6c946a3d2d",
+    "webp": "images/figma/trust-partner.webp"
+  },
+  "images/figma/trust-pci.png": {
+    "hash": "e0a2c129b8cf385c0ec6008b5f0f67937ae005ccc7d10bc4d85402b287d1f0bd",
+    "webp": "images/figma/trust-pci.webp"
+  },
+  "images/figma/wallet-momo.png": {
+    "hash": "d23171b310edcce864a72fd21ee576007845a2fdcfa995bb2cd4386e0f3eba7b",
+    "webp": "images/figma/wallet-momo.webp"
+  },
+  "images/figma/wallet-shopeepay.png": {
+    "hash": "ab4fa5d6a999c0b8baf0c234460edf4d6dc81cf41c4ed03a0a31b2478a3860f6",
+    "webp": "images/figma/wallet-shopeepay.webp"
+  },
+  "images/figma/wallet-viettelpay.png": {
+    "hash": "aa9bd1694d64a13a48fbff691d8f7249da69e35b1d7e871bf681a2bdd07760c2",
+    "webp": "images/figma/wallet-viettelpay.webp"
+  },
+  "images/figma/wallet-vnpay.png": {
+    "hash": "029dda8371bb95f2010395369070e7c179fbaf966328d08296ef99f8f665a5be",
+    "webp": "images/figma/wallet-vnpay.webp"
+  },
+  "images/figma/wallet-zalopay.png": {
+    "hash": "67aa2bfd5d192fda4df0c231ec033f447f118198ef813e80592d5c449b3324d2",
+    "webp": "images/figma/wallet-zalopay.webp"
+  },
+  "images/get-started.png": {
+    "hash": "92bf461bd1357ccf3e3eed6c0ba89cc34203fbd54be8fe2360d59fb5d9deffa6",
+    "webp": "images/get-started.webp"
+  },
+  "images/product-showcase/1.png": {
+    "hash": "9819c9a71757d3a29413ab1f97adce09db92daf861b589d0640644fdf3bdfe31",
+    "webp": "images/product-showcase/1.webp"
+  },
+  "images/product-showcase/2.png": {
+    "hash": "242575441d6b523622fe9f3975fa16c87ecce929f6afce7a9f0485357dccaf1d",
+    "webp": "images/product-showcase/2.webp"
+  },
+  "images/product-showcase/3.png": {
+    "hash": "e3b96e4b0972d42a3a09e32dff0b489b4ba25e8f3fc5736667920d49381cbbbe",
+    "webp": "images/product-showcase/3.webp"
+  },
+  "images/product-showcase/4.png": {
+    "hash": "8f11d8bbd3faddc2d3953d6a96451146ac97bbc5702c3f8626aad20e8a487f07",
+    "webp": "images/product-showcase/4.webp"
+  },
+  "images/product-showcase/5.png": {
+    "hash": "a3352a0a5d3bbb2cbd57f1b8f3010229a700b24d37d3b008a5b16e85f30b036e",
+    "webp": "images/product-showcase/5.webp"
+  },
+  "images/product-showcase/6.png": {
+    "hash": "361968322b0f611b722bc8a2f67c38ec1009bd5b83ce768a39608c4e7db8ffa6",
+    "webp": "images/product-showcase/6.webp"
+  },
+  "images/ready-with-unipay-small.png": {
+    "hash": "b5c6532bce393a7f702e33d3dcef37ff791662059f8f3ca469ac864f9c927aa5",
+    "webp": "images/ready-with-unipay-small.webp"
+  },
+  "images/ready-with-unipay.png": {
+    "hash": "74143c9a2818c8cabca599907ba868d9b120796c114033c2e491806abb647fd3",
+    "webp": "images/ready-with-unipay.webp"
+  }
+}

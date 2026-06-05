@@ -1,4 +1,11 @@
-export const figmaImage = (name: string) => `/images/figma/${name}`;
+/** Raster paths from Figma export; served as WebP after `npm run optimize:images`. */
+export const figmaImage = (name: string) => {
+  const normalized = name.replace(/\.(png|jpe?g)$/i, "");
+  return `/images/figma/${normalized}.webp`;
+};
+
+/** Any raster under /public (e.g. /images/get-started.png → .webp). */
+export const publicImage = (imagePath: string) => imagePath.replace(/\.(png|jpe?g)$/i, ".webp");
 
 export const deviceCards = [
   {
